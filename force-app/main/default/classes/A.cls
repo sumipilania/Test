@@ -43,6 +43,7 @@ public class A {
      
     public List<SelectOption> getSelectedValues(){
          System.debug('Test');
+          System.debug('Test1');
         List<SelectOption> options = new List<SelectOption>();
         List<String> objList = new List<String>();
         objList.addAll(rightvalues);
