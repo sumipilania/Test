@@ -1,0 +1,3 @@
+<apex:page controller="DeployRetriveMetadataController" action="{!redirectPage}">
+
+</apex:page>

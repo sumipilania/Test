@@ -1,0 +1,68 @@
+.mainDiv{
+    font-weight: bold;
+}
+.slds-modalcustom {
+    width: 100% !important; 
+    max-width: -webkit-fill-available !important;
+    padding: 0%;
+} 
+.slds-form-element_horizontal .slds-form-element__control, .slds-form_horizontal .slds-form-element .slds-form-element__control, .slds-form_stacked .slds-form-element_horizontal .slds-form-element__control {
+    padding-left: 9%;
+    clear: none;
+}
+.padding-left {
+    padding-left: 2%;
+}
+.slds-form-element_horizontal[punchh_sync-configurationComp_configurationComp] .slds-form-element__control[punchh_sync-configurationComp_configurationComp], .slds-form_horizontal[punchh_sync-configurationComp_configurationComp] .slds-form-element[punchh_sync-configurationComp_configurationComp] .slds-form-element__control[punchh_sync-configurationComp_configurationComp], .slds-form_stacked[punchh_sync-configurationComp_configurationComp] .slds-form-element_horizontal[punchh_sync-configurationComp_configurationComp] .slds-form-element__control[punchh_sync-configurationComp_configurationComp] {
+    padding-left: 9.2% !important;
+    clear: none;
+}
+.label-custom {
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    -webkit-hyphens: auto;
+    -ms-hyphens: auto;
+    hyphens: auto;
+    float: left;
+    padding-top: 5px;
+}
+.slds-tabs_default, .slds-modal__header, .slds-modal__content {
+    background-color: white !important;
+}
+.custom-label {
+    text-align: right;
+    font-size: 16px;
+    font-weight: 700;
+    min-width: 65px;
+  }
+  .align-label {
+    width: 6rem;
+    text-align: right;
+    width: 11rem;
+    text-align: right;
+    padding-right: 1rem;
+  }
+  .custom-row {
+    display: inline-flex;
+    width: -webkit-fill-available;
+    padding-top: 1rem;
+  }
+  .connection-success-msg {
+    color: green;
+    font-size: 16px;
+    font-family: Nunito Sans;
+  }
+  .connection-unsuccess-msg {
+    color: red;
+    font-size: 16px;
+    font-family: Nunito Sans;
+  }
+  .cursor-point {
+  cursor: pointer;
+  }
+  .margin-left {
+    margin-left: 0.5rem;
+  }
+  .padding-top {
+    padding-top: 0.7rem;
+  }

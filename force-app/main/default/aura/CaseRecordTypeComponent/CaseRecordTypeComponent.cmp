@@ -1,0 +1,56 @@
+<aura:component controller="CaseRecordTypeController" implements="flexipage:availableForAllPageTypes,force:hasRecordId" >
+    <aura:attribute name="createContactFlag" type="Boolean" default="false"/>
+    <aura:attribute name="sObjApiName" type="String" default="Contact"/>
+    <aura:handler name="init" action="{!c.doInit}" value="{!this}"/>
+    <aura:attribute name="recList" type="List"/>
+    <aura:attribute name="recordTypeId" type="Id"/>
+    <aura:attribute name="spinnerFlag" type="Boolean" default="false"/>
+    
+    <lightning:button variant="brand" label="Create Contact" title="Create Contact" onclick="{!c.handleClick}" />
+    <aura:if isTrue="{!v.createContactFlag}">
+        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <lightning:recordEditForm  aura:id="recordEditFormId" objectApiName="{!v.sObjApiName}" 
+                                          recordTypeId="{!v.recordTypeId}"
+                                          onload="{!c.handleLoad}"
+                                          onerror="{!c.handleError}"
+                                          onsubmit="{!c.handleSubmit}">
+                    <header class="slds-modal__header">
+                        <h2 class="inlineTitle slds-p-top--large slds-p-horizontal--medium slds-p-bottom--medium slds-text-heading--medium" data-aura-rendered-by="6:1847;a">New Contact</h2>
+                    </header>
+                    <div class="slds-modal__content" id="modal-content-id-1">
+                        <aura:if isTrue="{!v.spinnerFlag}"> 
+                            <div class="exampleHolder">
+                                <lightning:spinner alternativeText="Loading" size="medium" variant="brand"/>
+                            </div>
+                        </aura:if>
+                        <div class="demo-only demo-only--sizing slds-grid slds-wrap slds-p-around_medium">
+                            <div class="slds-size_1-of-2">
+                                <lightning:inputField fieldName="FirstName"/>
+                                <br/>
+                                <lightning:inputField fieldName="State__c"/>
+                            </div>
+                            <div class="slds-size_1-of-2">
+                                <lightning:inputField fieldName="LastName"/>
+                                <br/>
+                                <lightning:inputField fieldName="City__c"/>
+                            </div>
+                        </div>
+                        <div class="demo-only demo-only--sizing slds-grid slds-wrap slds-p-around_medium">
+                            <div class="slds-size_2-of-2">
+                                <lightning:combobox label="Select RecordType" placeholder="-None-" options="{!v.recList}" onchange="{!c.onSelectChange }"/>
+                            </div>
+                        </div>
+                    </div>
+                    <aura:if isTrue="{!not(empty(v.recordTypeId))}">
+                        <footer class="slds-modal__footer">
+                            <lightning:button label="Cancel" onclick="{!c.cancelClick }"/>
+                            <lightning:button variant="brand" label="Save" type="submit" />
+                        </footer>
+                    </aura:if>
+                </lightning:recordEditForm>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </aura:if>
+</aura:component>

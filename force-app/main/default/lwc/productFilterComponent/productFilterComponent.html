@@ -1,0 +1,17 @@
+<template>
+    <template if:true={attributeValueMap} for:each={attributeValueMap} for:item='attObj' for:index="index"><br key={attObj.mapKey}/>
+        <br key={attObj.mapKey}/> <h1 key = {attObj.mapKey}>{attObj.mapKey}</h1><br key={attObj.mapKey}/>
+          <template if:true={attObj.values} for:each={attObj.values} for:item='valObj'>
+           <lightning-button title={index} label={valObj.data} name ={attObj.mapKey} 
+                    onclick={handleClick} class="option-button slds-m-left_x-small" disabled={valObj.isVisible} key={attObj.mapKey}></lightning-button>
+        </template>
+    </template>
+    <div><br/>
+        <template if:true={attributeValueMap}>
+    <lightning-button  label="Reset" onclick={handleReset} class="slds-m-left_x-small" ></lightning-button><br/>
+        </template>
+    <template if:true={selectedFilterProductId}>
+        Your product Id : {selectedFilterProductId}
+    </template>
+</div>
+</template>

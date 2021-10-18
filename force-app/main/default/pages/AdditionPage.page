@@ -1,0 +1,9 @@
+<apex:page controller="Addition" id="thePage">
+
+    <apex:repeat value="{!strings}" var="string" id="theRepeat">
+
+        <apex:outputText value="{!string}" id="theValue"/><br/>
+
+    </apex:repeat>
+
+</apex:page>

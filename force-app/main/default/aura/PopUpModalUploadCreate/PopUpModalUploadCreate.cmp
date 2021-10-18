@@ -1,0 +1,71 @@
+<aura:component controller="CommunityDropBoxApexController">
+    <aura:attribute name="openModel" type="Boolean"/> <!-- Show upload file modal value receive from parent component-->
+    <aura:attribute name="createFolder" type="Boolean"/> <!-- Show create folder modal value receive from parent component-->
+    <aura:attribute name="childAccessToken" type="String"/> <!-- Access Token -->
+    <aura:attribute name="parentId" type="String"/> <!-- Path id which you want to  upload  file  -->
+    <aura:attribute name="folderPathChild" type="String"/> <!-- path for create folder at particular destination -->
+    <aura:attribute name="childRes" type="Boolean" /> <!-- call upload file handler -->
+    <aura:attribute name="childResFolder" type="Boolean" /> <!-- call create folder handler -->
+    <aura:attribute name="inputTextFolderName" type="String"/> <!-- fetch input value in text box -->
+    <aura:if isTrue="{!v.openModel}">
+        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <!-- ###### MODAL BOX HEADER Start ######-->
+                <header class="slds-modal__header">
+                    <lightning:buttonIcon iconName="utility:close"
+                                          onclick="{! c.closeModel }"
+                                          alternativeText="close"
+                                          variant="bare-inverse"
+                                          class="slds-modal__close"/>
+                    <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">BriskMinds Software Solution</h2>
+                </header>
+                <!--###### MODAL BOX BODY Part Start######-->
+                <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                    <h1>Upload New File</h1>
+                </div>
+                <!--###### MODAL BOX FOOTER Part Start ######-->
+                <footer class="slds-modal__footer">
+                    <div align="left">
+                        <input type="file" class="file" aura:id="file" />
+                        <div align="right">
+                            <lightning:button variant="brand" label="Upload File" title="Upload File" onclick="{!c.uploadFileHandler }" />
+                        </div>
+                    </div>
+                </footer>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </aura:if>
+    
+    <aura:if isTrue="{!v.createFolder}">
+        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <!-- ###### MODAL BOX HEADER Start ######-->
+                <header class="slds-modal__header">
+                    <lightning:buttonIcon iconName="utility:close"
+                                          onclick="{! c.closeModel }"
+                                          alternativeText="close"
+                                          variant="bare-inverse"
+                                          class="slds-modal__close"/>
+                    <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">BriskMinds Software Solution</h2>
+                </header>
+                <!--###### MODAL BOX BODY Part Start######-->
+                <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                    <h1>Create New Folder</h1>
+                </div>
+                <!--###### MODAL BOX FOOTER Part Start ######-->
+                <footer class="slds-modal__footer">
+                    <lightning:layout verticalAlign="end">
+                        <lightning:layoutItem flexibility="grow">
+                            <lightning:input aura:id="bar" placeholder="Enter text" onchange="{!c.getInputValueHandler}"/>
+                        </lightning:layoutItem>
+                        <lightning:layoutItem class="slds-p-left_x-small">
+                            <lightning:button variant="brand" label="Create Folder" onclick="{!c.createFolderHandler}" />
+                        </lightning:layoutItem>
+                    </lightning:layout>                            
+                </footer>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </aura:if>
+</aura:component>

@@ -1,0 +1,90 @@
+<template>
+  <!-- Spinnner -->
+  <template if:false={spinner}>
+    <lightning-spinner alternative-text="Loading"></lightning-spinner>
+  </template>
+
+  <div class="slds-align_absolute-center mainDiv">
+    <div class="slds-modal__container slds-modalcustom">
+      <!-- Header Start -->
+      <header class="slds-modal__header">
+        <h2 id="modal-heading-01" class="slds-page-header__title slds-truncate slds-float_left padding-left">
+          Configuration</h2>
+        <template if:false={cancelOrCloseFlag}>
+          <lightning-icon icon-name="utility:close" class="slds-float_right cursor-point" onclick={cancelHandler}
+            variant="success" size="small"></lightning-icon>
+        </template>
+      </header>
+       <!-- Header End -->
+       <!-- Body Start -->
+      <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+        <div class="slds-form">
+          <div class="custom-row">
+            <div class="align-label">
+              <label class="custom-label">API Endpoint</label>
+              <lightning-icon class="margin-left" icon-name="utility:info" alternative-text="Approved" size="xx-small"
+                title="Example: https://goclient-sfservicecloud.punchh.io/api/v1"></lightning-icon>
+            </div>
+            <input name="apiEndpoint" type="text" placeholder="API Endpoint" value={localConfig.configData.apiEndpoint}
+              class="slds-input" />
+          </div>
+          <div class="custom-row">
+            <div class="align-label">
+              <label class="custom-label">Client ID</label>
+            </div>
+            <input name="clientId" type="text" id="" placeholder="Client ID" value={localConfig.configData.clientId}
+              class="slds-input" data-required />
+          </div>
+          <div class="custom-row">
+            <div class="align-label">
+              <label class="custom-label">Secret ID</label>
+            </div>
+            <input name="clientSecret" type="text" placeholder="Secret ID" value={localConfig.configData.clientSecret}
+              class="slds-input" data-required />
+          </div>
+          <div class="custom-row">
+            <div class="align-label">
+              <label class="custom-label">Punchh URL</label>
+            </div>
+            <input name="punchhUrl" type="text" id="horizontal-input-punchh-url" placeholder="Punchh URL"
+              value={localConfig.configData.punchhUrl} class="slds-input" data-required="true" />
+          </div>
+          <div class="custom-row">
+            <div class="align-label">
+              <label class="custom-label">Admin Key</label>
+            </div>
+            <input name="adminKey" type="text" id="horizontal-input-admin-key" placeholder="Admin Key"
+              value={localConfig.configData.adminKey} class="slds-input" data-required />
+          </div>
+          <div class="slds-float_right padding-top">
+            <template if:true={unsuccessFlag}>
+              <span class="connection-status unsuccessful">
+                <svg class="slds-button__icon slds-button__icon_large" aria-hidden="true">
+                  <use xlink:href="/assets/icons/utility-sprite/svg/symbols.svg#close"></use>
+                </svg>
+              </span>
+              <span class="connection-unsuccess-msg"> &#10060; Connection unsuccessful&nbsp;&nbsp;</span>
+            </template>
+            <template if:true={successFlag}>
+              <span class="connection-status successful">
+                <svg class="slds-button__icon slds-button__icon_large" aria-hidden="true">
+                  <use xlink:href="/assets/icons/utility-sprite/svg/check.svg"></use>
+                </svg>
+              </span>
+              <span class="connection-success-msg"> &#10004; Connection successful &nbsp;&nbsp;</span>
+            </template>
+            <button class="slds-button slds-button_outline-brand test-btn" data-btn="Test"
+              onclick={saveAndTestHandler}>Test Connection</button>
+          </div>
+        </div>
+      </div>
+      <!-- Body End -->
+      <footer class="slds-modal__footer">
+        <button class="slds-button slds-button_neutral cancel-btn" onclick={cancelHandler}
+          disabled={cancelOrCloseFlag}>Cancel</button>
+        <button class="slds-button slds-button_brand save-btn" data-btn="SAVE" onclick={saveAndTestHandler}
+          disabled={showHideSaveBtn}>Save Changes</button>
+      </footer>
+    </div>
+  </div>
+</template>

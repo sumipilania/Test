@@ -1,0 +1,10 @@
+<aura:component implements="flexipage:availableForAllPageTypes,force:appHostable" access="global">
+    <!--Declare Attributes-->
+    <aura:attribute name="vfMsgMethod" type="object" description="this attribute is for visualforce page javascript method"/>
+     
+    <!--Component Start-->
+    <div class="slds-m-around_xx-large">
+        <lightning:button variant="Brand" class="slds-button" label="Submit" onclick="{!c.doAction}"/>
+    </div>
+    <!--Component End-->
+</aura:component>

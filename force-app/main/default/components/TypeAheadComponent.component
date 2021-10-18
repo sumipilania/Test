@@ -1,0 +1,60 @@
+<apex:component controller="TypeAheadComponentController" allowDML="true">
+    
+    <apex:attribute name="objName" description="Object Name" type="String" assignTo="{!objectName}"  />
+    <apex:attribute name="objField" description="Object Field Name" type="String" assignTo="{!objectFieldName}" />
+    <apex:attribute name="uniqueId" description="Object Id" type="String"/>
+    
+   
+    <apex:stylesheet value="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css"/>
+    <apex:stylesheet value="/resources/demos/style.css"/>
+    <apex:includeScript value="https://code.jquery.com/jquery-1.12.4.js"/>
+    <apex:includeScript value="https://code.jquery.com/ui/1.12.1/jquery-ui.js"/>
+    
+    <script>
+    //JQuery Main Function
+    $( function() {    
+        var {!uniqueId};
+        
+        //method for searching autocomplete
+        $("#mainIdOfAutocomplete{!uniqueId}").autocomplete({
+            source: function(request, response) {
+                console.log('inner2');
+                Visualforce.remoting.Manager.invokeAction( '{!$RemoteAction.TypeAheadComponentController.autoCompleteMethod}',
+                                                          request.term,'{!objectName}',
+                                                          function(result, event){
+                                                              
+                                                              if (event.status)
+                                                              {
+                                                                  //Response from Contreller and Show on UI using Response
+                                                                  response(result);
+                                                              }
+                                                              else 
+                                                              {
+                                                                  alert(event.message);
+                                                              }
+                                                          });
+            },
+            select:function( event, ui ){
+                detailPageFun(ui.item.label, '{!objectName}'); //Detail Page Show Call Action Function
+                
+            }
+        });
+        
+    } );
+    
+    </script>
+    <apex:form >
+        <apex:actionFunction name="detailPageFun" action="{!detailPageShow}" reRender="panel">
+            <apex:param value="" name="param1" assignTo="{!queryString}"/>
+            <apex:param value="" name="param2" assignTo="{!objectName}"/>
+        </apex:actionFunction>
+        <apex:pageBlock >
+            <apex:pageBlockSection title="{!objectName}">
+                <input id="mainIdOfAutocomplete{!uniqueId}" value="{!searchTerm}"/>
+            </apex:pageBlockSection>
+        </apex:pageBlock>
+        <apex:outputPanel id="panel">
+            <apex:detail subject="{!sObj[0].id}" relatedList="false" inlineEdit="true"/>
+        </apex:outputPanel> 
+    </apex:form>
+</apex:component>

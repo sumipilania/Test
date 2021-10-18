@@ -1,0 +1,9 @@
+<aura:component implements="lightning:isUrlAddressable">
+    <aura:attribute name="listofAccounts" type="List" />
+    <aura:handler name="init" value="{!this}" action="{!c.onPageReferenceChange}"/>
+    <lightning:card title="Account List">
+        <aura:iteration items="{!v.listofAccounts}" var="item">
+            <p class="slds-p-horizontal_small"> Account Id {!item} </p>
+        </aura:iteration>       
+    </lightning:card>     
+</aura:component>

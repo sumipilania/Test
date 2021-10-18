@@ -1,0 +1,6 @@
+<apex:component >
+    <Apex:form >
+    <apex:actionFunction name="tempCall" reRender="tmp" status="loadStatus"/>
+    </Apex:form>
+
+</apex:component>

@@ -1,0 +1,10 @@
+.THIS {
+}
+.THIS .block_container
+{
+    text-align:center;
+}
+.THIS .bloc1,.THIS .bloc2
+{
+    display:inline;
+}

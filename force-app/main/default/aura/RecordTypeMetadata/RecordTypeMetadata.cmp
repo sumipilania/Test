@@ -1,0 +1,59 @@
+<aura:component controller="RecordTypeMetadataController">
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:attribute name="recList" type="List"/>
+    <aura:attribute name="controlList" type="List"/>
+    <aura:attribute name="depList" type="List"/>
+    <aura:attribute name="depRemList" type="List"/>
+    <aura:attribute name="controlMapList" type="List"/>
+    <aura:attribute name="depFlag" type="Boolean" default="true"/>
+    <aura:attribute name="sObjApiName" type="String" default="RecordType__c"/>
+    <aura:attribute name="controlField" type="String" default="Controlling__c"/>
+    <aura:attribute name="depField" type="String" default="DependentList__c"/>
+    <aura:handler event="aura:waiting" action="{!c.showSpinner}"/>	<!-- Show Spinner According When Complete Apex Controller Prcessiong done-->
+    <aura:handler event="aura:doneWaiting" action="{!c.hideSpinner}"/>	<!-- After Complete Apex Controller Processing Done -->
+    <aura:attribute name="Spinner" type="boolean" default="false"/>	<!-- Spinner Show and Hide -->
+    
+    <!-- Spinner Handler -->
+    <aura:if isTrue="{!v.Spinner}">
+        <div aura:id="spinnerId" class="slds-spinner_container">
+            <div class="slds-spinner--brand  slds-spinner slds-spinner--large slds-is-relative" role="alert">
+                <span class="slds-assistive-text">Loading</span>
+                <div class="slds-spinner__dot-a"></div>
+                <div class="slds-spinner__dot-b"></div>
+            </div>
+        </div>
+    </aura:if>
+    
+    <!-- Record Type List -->
+    <div class="slds-align_absolute-center">
+        <lightning:select label="Select RecordType" onchange="{!c.onSelectChange}" aura:id="recTypeId" >
+            <option value="" text="- None -" />
+            <aura:iteration items="{!v.recList}" var="obj">
+                <option  value="{!obj.key}" label="{!obj.key}" />
+            </aura:iteration>
+        </lightning:select>
+        <br/>
+    </div><br/><br/><br/>
+    
+     <!-- Controlling Field List -->
+    <div class="slds-align_absolute-center">
+        <lightning:select label="Select Controlling Field" onchange="{!c.onSelectControlChange}" >
+            <option value="None" text="- None -" />
+            <aura:iteration items="{!v.controlList}" var="obj">
+                <option  value="{!obj}" label="{!obj}" />
+            </aura:iteration>
+        </lightning:select>
+        <br/>
+    </div><br/><br/><br/>
+    
+    <!-- Dependent Field List -->
+    <div class="slds-align_absolute-center">
+        <lightning:select label="Select Dependent Field" disabled="{!v.depFlag}" aura:id="depId">
+            <option value="None" text="- None -" />
+            <aura:iteration items="{!v.depList}" var="obj">
+                <option  value="{!obj}" label="{!obj}" />
+            </aura:iteration>
+        </lightning:select>
+        <br/>
+    </div>
+</aura:component>

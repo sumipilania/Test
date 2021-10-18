@@ -1,0 +1,57 @@
+<aura:component controller="DynmaicSobjectFieldPopup">
+    <aura:attribute name="openModel" type="Boolean"/>
+     <aura:attribute name="childValue" type="Boolean"/>
+    <aura:attribute name="flagSave" type="Boolean" default="false"/>
+    <aura:attribute name="sObjApiName" type="String"/>
+    <aura:attribute name="fieldApiList" type="List" default=""/>
+    <aura:attribute name="recordList" type="List"/>
+    <aura:handler name="init" action="{!c.doInit}" value="{!this}"/>
+     <aura:handler event="aura:waiting" action="{!c.showSpinner}"/>	<!-- Show Spinner According When Complete Apex Controller Prcessiong done-->
+    <aura:handler event="aura:doneWaiting" action="{!c.hideSpinner}"/>	<!-- After Complete Apex Controller Processing Done -->
+    <aura:attribute name="Spinner" type="boolean" default="false"/>	<!-- Spinner Show and Hide -->
+    
+    <aura:if isTrue="{!v.openModel}">
+    <!-- Spinner Handler -->
+    <aura:if isTrue="{!v.Spinner}">
+        <div aura:id="spinnerId" class="slds-spinner_container">
+            <div class="slds-spinner--brand  slds-spinner slds-spinner--large slds-is-relative" role="alert">
+                <span class="slds-assistive-text">Loading</span>
+                <div class="slds-spinner__dot-a"></div>
+                <div class="slds-spinner__dot-b"></div>
+            </div>
+        </div>
+    </aura:if>
+    
+        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <header class="slds-modal__header">
+                    <lightning:buttonIcon iconName="utility:close"
+                                          onclick="{! c.closeModel }"
+                                          alternativeText="close"
+                                          variant="bare-inverse"
+                                          class="slds-modal__close"/>
+                    <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">BriskMinds Software Solution</h2>
+                </header>
+                <!--###### MODAL BOX BODY Part Start######-->
+                <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                    <!--Component Start-->
+                   
+                    <div class="slds-m-around_xx-large">
+                        <lightning:recordEditForm objectApiName="{!v.sObjApiName}" aura:id="accForm" onsuccess="{!c.successHandler}" onsubmit="{!c.submitHandler}">
+                            <lightning:messages />
+                            <aura:iteration items="{!v.recordList}" var="obj" >
+                            <lightning:inputField fieldName="{!obj.fieldApi}"/>
+                            </aura:iteration>
+                             <lightning:button variant="brand" label="Submit" type="submit"/>
+                        </lightning:recordEditForm>
+                       
+                    </div>
+                    
+                    <!--Component End-->
+                </div>
+                
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </aura:if>
+</aura:component>

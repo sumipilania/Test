@@ -1,0 +1,9 @@
+.THIS {
+}
+.THIS .slds-select_container .slds-select {
+    -webkit-appearance: menuList;
+    border: 1px solid #536b80;
+}
+.THIS .slds-select_container::before { border-bottom: none;}
+.THIS .slds-select_container::after { border-top: none;}
+.THIS .slds-select_container .slds-select { -webkit-appearance : menuList}

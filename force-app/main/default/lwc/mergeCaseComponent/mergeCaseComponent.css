@@ -1,0 +1,11 @@
+.slds-modal__container {
+    margin: 0 auto;
+    width: 50%;
+    max-width: 80rem;
+    min-width: 50rem;
+}
+.h1{
+    font-weight: inherit;
+    font-size: 2em;
+    color: green;
+}

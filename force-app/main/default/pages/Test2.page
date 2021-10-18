@@ -1,0 +1,78 @@
+<apex:page controller="StandardPaginationSorting" showHeader="false" sidebar="false"> 
+
+    <!-- CSS added to display alternate row colors and Center align Text in PageblockTable -->
+    <style type="text/css">
+        .oddrow{background-color: #00FFFF; } 
+        .evenrow{background-color: #7FFFD4; } 
+        .textalign{text-align:center; } 
+    </style>
+
+    <apex:form id="form">
+        <!-- Tabstyle attribute is used to assign the color scheme to the pageblock.Here Candidate Object color scheme is used for the pageblock-->
+        <apex:pageBlock id="pgblock" tabStyle="Candidate__C">
+            <apex:pageBlockSection title="Candidate Details -  Page " columns="1" collapsible="false">   
+                <!-- Rowclasses attribute is used to define different CSS classes for different rows. 
+                     Rules attribute is used: borders drawn between cells in the page block table.
+                     Title attribute will be used as a help text when a user hovers mouse over the Page Block table.
+                     Styleclass, HeaderClass attributes are used to Center align Table Text in Page Block table --->
+                <apex:pageBlockTable value="{!CandidateList}" var="CadList" rowClasses="oddrow,evenrow"   rules="groups"  title="Click Column Header for Sorting"  styleclass="textalign" headerClass="textalign" >
+                    <apex:column >
+                       <apex:facet name="header" >
+                           <apex:commandLink value="Account Name" action="{!toggleSort}" rerender="pgblock">
+                                <!-- Value attribute should have field (API Name) to sort in asc or desc order -->
+                                <apex:param name="sortField" value="Name" assignTo="{!sortField}"/>
+                           </apex:commandLink>
+                        </apex:facet>
+                        <apex:outputField value="{!CadList.name}"/>
+                    </apex:column> 
+					
+                    <apex:column >
+                        <apex:facet name="header">
+                            <apex:commandLink value="Phone" action="{!toggleSort}" rerender="pgblock">
+                                <apex:param name="sortField" value="Phone" assignTo="{!sortField}"/>
+                            </apex:commandLink>
+                        </apex:facet>
+                        <apex:outputField value="{!CadList.Phone}"/>
+                    </apex:column>
+
+                    <apex:column >
+                        <apex:facet name="header">
+                            <apex:commandLink value="Type" action="{!toggleSort}" rerender="pgblock">
+                                <apex:param name="sortField" value="Type" assignTo="{!sortField}"/>
+                            </apex:commandLink>
+                        </apex:facet>
+                        <apex:outputField value="{!CadList.Type}"/>
+                    </apex:column>
+
+                    <apex:column >
+                        <apex:facet name="header">
+                            <apex:commandLink value="Industry" action="{!toggleSort}" rerender="pgblock">
+                                <apex:param name="sortField" value="Industry" assignTo="{!sortField}"/>
+                            </apex:commandLink>
+                        </apex:facet>
+                        <apex:outputField value="{!CadList.Industry}"/>
+                    </apex:column>
+
+                    <apex:column >
+                        <apex:facet name="header">
+                            <apex:commandLink value="BillingState" action="{!toggleSort}" rerender="pgblock">
+                                <apex:param name="sortField" value="BillingState" assignTo="{!sortField}"/>
+                            </apex:commandLink>
+                        </apex:facet>
+                        <apex:outputField value="{!CadList.BillingState}"/>
+                    </apex:column>
+
+                   
+                </apex:pageBlockTable>
+            </apex:pageBlockSection>
+
+            <apex:panelGrid columns="4">
+                <apex:commandLink action="{!first}">First</apex:commandLink>
+                <apex:commandLink action="{!previous}" rendered="{!hasPrevious}">Previous</apex:commandLink>
+                <apex:commandLink action="{!next}" rendered="{!hasNext}">Next</apex:commandLink>
+                <apex:commandLink action="{!last}">Last</apex:commandLink>
+            </apex:panelGrid>
+
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

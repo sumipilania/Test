@@ -1,0 +1,4 @@
+<aura:component implements="lightning:actionOverride,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,force:lightningQuickAction" access="global" >
+	gyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy
+    doinit  <aura:handler name="init" action="{!c.doinit}" value="{!this}"/>
+</aura:component>

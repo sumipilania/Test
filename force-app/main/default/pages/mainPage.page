@@ -1,0 +1,21 @@
+<apex:page standardController="Account" sidebar="false" showHeader="false">
+    <apex:includeLightning />
+    <!--Lightning Container-->
+    <div style="width:100%;height:100px;" id="LightningContainer"/>
+     
+    <script type="text/javascript">
+    //Create Lightning Component
+    $Lightning.use("c:SampleApp", function() {
+        $Lightning.createComponent("c:SampleComponent", { 
+            vfMsgMethod : hy, //Method to call from lightning component
+        },"LightningContainer", function(component) {
+            console.log('Component created');
+        });
+    });
+     
+    //Function to call from Lightning Component
+    function hy(welcomeMsg){
+        alert(welcomeMsg);
+    }
+    </script>
+</apex:page>

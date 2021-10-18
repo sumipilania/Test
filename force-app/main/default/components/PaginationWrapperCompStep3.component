@@ -1,0 +1,129 @@
+<apex:component controller="PaginationWrapperStep3" allowDML="true"  id="CompId">
+    <apex:attribute name="SelectObj" description="The type of Object we are viewing." type="String" assignTo="{!queryObject}"  />
+    <apex:attribute name="Selectfields" description="The type of query we are viewing." type="String" assignTo="{!queryField}" />
+    <apex:attribute name="sObjField" description="fetch list of field" type="String[]" assignTo="{!fieldList}" />
+    <script type="text/javascript">
+    
+    //Checked all selected checkbox
+    function selectAllCheckboxes(obj,receivedRecID){
+        var inputCheckBox = document.getElementsByTagName("input");                  
+        for(var i=0; i<inputCheckBox.length; i++){          
+            if(inputCheckBox[i].id.indexOf(receivedRecID)!=-1){                                     
+                inputCheckBox[i].checked = obj.checked;
+            }
+        }
+    }
+    
+    //Header Checkbox deselect if any record deselect
+    function facetHeaderUnchecked() {
+        // $('[id$=facetHeaderId]').removeAttr('checked');
+        var selectAllCB = document.getElementsByClassName('class_1')[0];
+        var cbs = document.getElementsByClassName('class_2');
+        var flag=true;
+        for(var i=0 ; i<cbs.length; i++){
+            if(cbs[i].checked==false){
+                flag=false;
+                break;
+            }    
+        } 
+        if(flag==true){
+            document.getElementsByClassName('class_1')[0].checked=true;
+        }else{
+            document.getElementsByClassName('class_1')[0].checked=false;
+        }
+    }
+ 
+    //Download Csv using comma seprated values
+    function downloadCsvFile(csv)
+    {
+        var hiddenElement = document.createElement('a');
+        hiddenElement.href = 'data:text/csv;charset=utf-8,' + encodeURI(csv);
+        hiddenElement.download = 'ExportData.csv';  // CSV file Name* you can change it.[only name not .csv] 
+        hiddenElement.click(); // using click() js function to download csv file
+        
+    }
+    </script>
+    
+    <apex:form id="form" >
+        <apex:pageBlock id="pgblock" >
+            
+            <!--     Button Of Page New Delete Download Csv ---->
+            <apex:outputPanel layout="block" style="overflow:auto;width:1600px;" id="panelId">
+                <apex:commandButton action="{!if(queryObject='Contact', URLFOR($Action.Contact.NewContact), URLFOR($Action[queryObject].New))}" value="New Record" /> &nbsp;&nbsp;
+                <apex:commandButton action="{!deleteSelectedRec}" value="Delete Selected" disabled="{!IF((wrapClassList.size<=0),true,false)}" />
+                <apex:commandButton action="{!downloadCsv}" value="Download CSV"  oncomplete="downloadCsvFile('{!csv}')"  reRender="pgblock" disabled="{!IF((wrapClassList.size<=0),true,false)}" /> 
+                
+                <!-- Alphabet Filters  -->   
+                <div style="float:right">
+                    <apex:repeat value="{!indexList}" var="inList">
+                        <apex:commandLink value="{!inList}" action="{!listOfAlpha}" rerender="pgblock" style="color:#015ba7;text-decoration:none;padding:4px;" >
+                            <apex:param name="alphaSeries" value="{!inList}" assignTo="{!alphaSeries}"/>
+                        </apex:commandLink>
+                    </apex:repeat>
+                </div>
+                
+                <!-- Java Script Header Check Box     -->   
+                <apex:pageBlockTable value="{!wrapClassList}" var="wrapObj" id="pgTable"> 
+                    <apex:column id="colId" >
+                        <apex:facet name="header">
+                            <apex:inputCheckbox id="facetHeaderId" onclick="selectAllCheckboxes(this,'inputId')" styleClass="class_1"/>
+                        </apex:facet>
+                        <apex:inputCheckbox value="{!wrapObj.selected}" onclick="facetHeaderUnchecked();" id="inputId" styleClass="class_2"/>
+                    </apex:column>
+                    
+                    <!-- Action Edit And Delete Link  -->     
+                    <apex:column headerValue="Action">
+                        <apex:outputlink value="https://ap15.salesforce.com/{!wrapObj.sobjecIns.Id}/e?retURL=%2F{!wrapObj.sobjecIns.Id}" style="color:#015ba7;text-decoration:none;" >Edit |</apex:outputlink>
+                        <apex:commandlink value="Del" reRender="pgblock" action="{!deleteSpecificRec}" style="color:#015ba7;text-decoration:none;">
+                            <apex:param name="rId" value="{!wrapObj.sobjecIns.Id}" assignTo="{!rId}"/>
+                        </apex:commandlink>
+                    </apex:column>
+                    
+                    <!--- Show Field Name With Sorting   --> 
+                    <apex:repeat value="{!fieldList}" var="fieldItem">
+                        <apex:column >
+                            <apex:facet name="header">
+                                <apex:commandLink value="{!fieldItem}"  action="{!toggleSort}" rerender="pgblock" style="display:block;">
+                                    <!-- Value attribute should have field (API Name) to sort in asc or desc order -->
+                                    <apex:param name="sortField" value="{!fieldItem}" assignTo="{!sortField}"/>
+                                </apex:commandLink>
+                            </apex:facet>
+                            <apex:outputField value="{!wrapObj.sobjecIns[fieldItem]}"/>
+                        </apex:column> 
+                    </apex:repeat>
+                </apex:pageBlockTable> 
+            </apex:outputPanel><br/>
+            <apex:outputPanel style="display:{!IF((wrapClassList.size<=0),'block','none')}" >
+              No Records Found
+            </apex:outputPanel>
+            
+            <!-- No Of Records show on Page -->
+            <apex:outputPanel style="display:{!IF((wrapClassList.size>0),'block','none')}; text-align:center;" >
+                <div style="position:fixed;">
+                    <apex:selectList value="{!size}" multiselect="false" size="1"   style="float:left;" title="No of Records">
+                        <apex:actionSupport event="onchange" action="{!refreshPageSize}" oncomplete="facetHeaderUnchecked();" reRender="pgblock" />
+                        <apex:selectOptions value="{!paginationSizeOptions}"/>
+                    </apex:selectList>
+                </div>  
+                
+                <!-- Pagination Section  -->
+                <apex:commandButton value="First" reRender="pgblock" action="{!first}" disabled="{!NOT(setCon.hasPrevious)}" oncomplete="facetHeaderUnchecked()" />
+                <apex:commandButton value="Previous" rerender="pgblock" action="{!previous}" disabled="{!NOT(setCon.hasPrevious)}" oncomplete="facetHeaderUnchecked()" />
+                <apex:commandButton value="Next" rerender="pgblock" action="{!next}" disabled="{!NOT(setCon.hasNext)}" oncomplete="facetHeaderUnchecked()" />
+                <apex:commandButton value="Last" rerender="pgblock" action="{!last}" disabled="{!NOT(setCon.hasNext)}" oncomplete="facetHeaderUnchecked()" /> &nbsp;
+                
+                <!-- Page Number Show On Vf Page -->
+                Page: <apex:inputText style="width:20px;" value="{!setCon.pageNumber}" >
+                <apex:actionSupport event="onchange" reRender="pgblock" action="{!fetchWrapperList}" status="loadStatusComp" oncomplete="facetHeaderUnchecked()" />
+                </apex:inputText> {!totalPages}&nbsp; 
+            </apex:outputPanel> 
+        </apex:pageBlock>
+        
+        <!--  Load Whole Component than perform all Opertaion call by vf Page -->
+        <apex:actionFunction name="tempCall" action="{!tempCall}" reRender="component" />
+    </apex:form>
+    <style>
+        .class_1{}
+        .class_2{}
+    </style>
+</apex:component>

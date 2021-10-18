@@ -1,0 +1,48 @@
+<aura:component controller="Test2" implements="flexipage:availableForAllPageTypes,force:appHostable" access="global">
+
+   <!-- attribute to accept Visualforce page's javascript method -->
+   <aura:attribute name="sendData" type="object"/>
+    <aura:attribute name="dataList" type="List"/>
+<aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+   <!-- Button component to invoke PDF download -->
+   <lightning:button label="Download Document" onclick="{!c.downloadDocument}" />
+    
+    
+    
+    <table class="slds-table slds-table_cell-buffer slds-table_bordered">
+        <thead>
+            <tr class="slds-line-height_reset">
+                <th class="slds-text-title_caps" scope="col">
+                    <div class="slds-truncate" title="Title">Id</div>
+                </th>
+                <th class="slds-text-title_caps" scope="col">
+                    <div class="slds-truncate" title="File Type">Name</div>
+                </th>
+                <th class="slds-text-title_caps" scope="col">
+                    <div class="slds-truncate" title="Created By">Phone</div>
+                </th>
+               
+            </tr>
+        </thead>
+        <tbody>
+            <aura:iteration items="{!v.dataList}" var="CD">
+                <tr>
+                    <th scope="row">
+                        <div class="slds-truncate" title="{!CD.Id}">
+                            <!--store contentDocument Id in data-Id attribute-->
+                            <a onclick="{!c.getSelected}" data-Id="{!CD.Id}">{!CD.Id}</a>
+                        </div>
+                    </th>
+                    <th scope="row">
+                        <div class="slds-truncate" title="{!CD.Name}">{!CD.Name}</div>
+                    </th>
+                    <th scope="row">
+                        <div class="slds-truncate" title="{!CD.Phone}">{!CD.Phone}</div>
+                    </th>
+                   
+                </tr>  
+            </aura:iteration>
+        </tbody>
+    </table>
+    
+</aura:component>

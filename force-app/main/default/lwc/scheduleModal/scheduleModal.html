@@ -1,0 +1,492 @@
+<template>
+
+    <!-- SPINNER -->
+    <template if:false={spinner}>
+        <lightning-spinner alternative-text="Loading"></lightning-spinner>
+    </template>
+
+    <div class="slds-align_absolute-center">
+        <div class="slds-modal__container slds-modalcustom">
+            <div class="slds-tabs_default">
+                <header class="slds-modal__header">
+                    <lightning-icon icon-name="utility:close" class="slds-float_right cursor-pointer"
+                        onclick={cancelHandler} variant="success" size="small"></lightning-icon>
+                    <ul class="slds-tabs_default__nav" role="tablist">
+                        <li class={tabHideActive.fieldMappingActiveInactive} title="Item One" role="presentation">
+                            <a class="slds-tabs_default__link" role="tab" aria-selected="true"
+                                aria-controls="tab-default-field-mapping" id="tab-default-field_mapping__item"
+                                onclick={fieldTabHandler}>Field Mapping</a>
+                        </li>
+                        <li class={tabHideActive.scheduleActiveInactive} title="Item Two" role="presentation">
+                            <a class="slds-tabs_default__link" role="tab" aria-selected="false"
+                                aria-controls="tab-default-schedule" id="tab-default-schedule__item"
+                                onclick={scheduleTabHandler}>Schedule</a>
+                        </li>
+                    </ul>
+                </header>
+                <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                    <div id="tab-default-field-mapping" class={tabHideActive.fieldMappingHideShow} role="tabpanel"
+                        aria-labelledby="tab-default-field_mapping__item">
+                        <div
+                            class="slds-form-element slds-form-element_edit slds-form-element_readonly slds-hint-parent editable-div">
+                            <div class="slds-form-element__control">
+                                <template if:true={localScheduleDetails}>
+                                    <template if:true={localScheduleDetails.allDetails}>
+                                        <template if:true={isReadOnly}>
+                                            <input value={localScheduleDetails.allDetails.name}
+                                                class="input-schedule-name" disabled />
+                                        </template>
+                                        <template if:false={isReadOnly}>
+                                            <input data-title="name" onchange={updateName}
+                                                value={localScheduleDetails.allDetails.name}
+                                                class="input-schedule-name" />
+                                        </template>
+                                    </template>
+                                </template>
+                                <template if:false={scheduleDetails}>
+                                    <input value={currentDateTime.scheduleDefaultName} onchange={updateName}
+                                        data-title="name" class="input-schedule-name" />
+                                </template>
+                            </div>
+                        </div>
+                        <div class="slds-form slds-box">
+                            <table class="slds-table slds-table_cell-buffer slds-table_bordered">
+                                <thead>
+                                    <tr class="slds-line-height_reset">
+                                        <template for:each={headerList} for:item="header">
+                                            <th class="" scope="col" key={header.label}>
+                                                <div class="slds-truncate slds-align_absolute-center" title="Name">
+                                                    {header.label}</div>
+                                            </th>
+                                        </template>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="background-white">
+                                        <td>
+                                            <template if:true={fieldMappingMetadata}>
+                                                <template if:true={fieldMappingMetadata.data}>
+                                                    <lightning-combobox class="custom-header"
+                                                        options={fieldMappingMetadata.data} placeholder="Please Select"
+                                                        value={fieldMappingMetadata.userType} disabled={isReadOnly}
+                                                        data-obj="punchh" onchange={selectObject}></lightning-combobox>
+                                                </template>
+                                            </template>
+                                        </td>
+                                        <td>
+                                            <template if:true={fieldMappingMetadata}>
+                                                <template if:true={fieldMappingMetadata.sfData}>
+                                                    <lightning-combobox class="custom-header"
+                                                        options={fieldMappingMetadata.sfData}
+                                                        placeholder="Please Select"
+                                                        value={fieldMappingMetadata.objectName} disabled={isReadOnly}
+                                                        data-obj="salesforce" onchange={selectObject}>
+                                                    </lightning-combobox>
+                                                </template>
+                                            </template>
+                                        </td>
+                                        <td>
+                                            <div class="blank-div"></div>
+                                        </td>
+                                        <td>
+                                            <div></div>
+                                        </td>
+                                    </tr>
+                                    <template if:true={showHideObj.showFields}>
+                                        <template if:true={allFieldsList} for:each={allFieldsList} for:item="fieldObj"
+                                            for:index="index">
+                                            <tr key={fieldObj.required}>
+                                                <td>
+                                                    <template if:true={fieldObj.required}>
+                                                        <lightning-combobox class="custom-tr"
+                                                            options={punchFields.requriedList} disabled
+                                                            value={fieldObj.punchhAttr}></lightning-combobox>
+                                                    </template>
+                                                    <template if:false={fieldObj.required}>
+                                                        <lightning-combobox disabled={isReadOnly} class="custom-tr"
+                                                            placeholder="Please Select" data-pf={index} data-so="pf"
+                                                            options={punchFields.nonRequriedList}
+                                                            onchange={selectedPickListValues}
+                                                            value={fieldObj.punchhAttr}></lightning-combobox>
+                                                    </template>
+                                                </td>
+                                                <td>
+                                                    <template if:true={fieldObj.isInputField}>
+                                                        <template if:true={scheduleDetails}>
+                                                            <template if:true={scheduleDetails.allDetails}>
+                                                                <template if:true={isReadOnly}>
+                                                                    <lightning-input type="text" class="custom-tr"
+                                                                        data-pinputfield={index} disabled
+                                                                        value={fieldObj.isInputFieldValue}>
+                                                                    </lightning-input>
+                                                                </template>
+                                                                <template if:false={isReadOnly}>
+                                                                    <lightning-input type="text" class="custom-tr"
+                                                                        data-pinputfield={index}
+                                                                        onchange={setPunchFieldInputValue}
+                                                                        value={fieldObj.isInputFieldValue}>
+                                                                    </lightning-input>
+                                                                </template>
+                                                            </template>
+                                                        </template>
+                                                        <template if:false={scheduleDetails}>
+                                                            <lightning-input type="text" class="custom-tr"
+                                                                onchange={setPunchFieldInputValue}
+                                                                data-pinputfield={index}></lightning-input>
+                                                        </template>
+                                                    </template>
+                                                    <template if:false={fieldObj.isInputField}>
+                                                        <lightning-combobox disabled={isReadOnly} class="custom-tr"
+                                                            placeholder="Please Select" data-sf={index} data-so="sf"
+                                                            options={sfFields} onchange={selectedPickListValues}
+                                                            value={fieldObj.salesforceAttr}></lightning-combobox>
+                                                    </template>
+                                                </td>
+                                                <td>
+                                                    <div class="slds-grid slds-gutters align-height">
+                                                        <div class="slds-col">
+                                                            <label class="container">
+                                                                <template if:false={fieldObj.isInputField}>
+                                                                    <template if:true={isReadOnly}>
+                                                                        <input type="checkbox" disabled="disabled"
+                                                                            checked={fieldObj.isChecked} data-cb={index}
+                                                                            onchange={checkboxHandler} value={index}>
+                                                                        <span class="checkmark"></span>
+                                                                    </template>
+                                                                    <template if:false={isReadOnly}>
+                                                                        <template if:true={fieldObj.disableCb}>
+                                                                            <input type="checkbox" disabled="disabled"
+                                                                                checked={fieldObj.isChecked}
+                                                                                data-cb={index}
+                                                                                onchange={checkboxHandler}
+                                                                                value={index}>
+                                                                            <span class="checkmark"></span>
+                                                                        </template>
+                                                                        <template if:false={fieldObj.disableCb}>
+                                                                            <input type="checkbox" data-cb={index}
+                                                                                checked={fieldObj.isChecked}
+                                                                                onchange={checkboxHandler}
+                                                                                value={index}>
+                                                                            <span class="checkmark"></span>
+                                                                        </template>
+                                                                    </template>
+                                                                </template>
+                                                            </label>
+                                                        </div>
+                                                        <template if:true={fieldObj.isChecked}>
+                                                            <div class="slds-col">
+                                                                <lightning-combobox options={fieldObj.operatorOptions}
+                                                                    disabled={isReadOnly} class="custom-tr"
+                                                                    placeholder="Please Select"
+                                                                    value={fieldObj.filterSymbol} data-in={index}
+                                                                    onchange={operatorChangeHanlder}>
+                                                                </lightning-combobox>
+                                                            </div>
+                                                            <div class="slds-col">
+                                                                <template if:true={fieldObj.isStringField}>
+                                                                    <lightning-input disabled={isReadOnly}
+                                                                        value={fieldObj.filterInputData}
+                                                                        onchange={operatorValueChangeHanlder}
+                                                                        data-in={index} type="text"></lightning-input>
+                                                                </template>
+                                                                <template if:true={fieldObj.isBooleanField}>
+                                                                    <lightning-combobox disabled={isReadOnly}
+                                                                        placeholder="Please Select" data-in={index}
+                                                                        options={booleanOption}
+                                                                        onchange={operatorValueChangeHanlder}
+                                                                        value={fieldObj.filterInputData}>
+                                                                    </lightning-combobox>
+                                                                </template>
+                                                                <template if:true={fieldObj.isNumberField}>
+                                                                    <lightning-input disabled={isReadOnly}
+                                                                        value={fieldObj.filterInputData}
+                                                                        onchange={operatorValueChangeHanlder}
+                                                                        data-in={index} type="number"></lightning-input>
+                                                                </template>
+                                                                <template if:true={fieldObj.isDataField}>
+                                                                    <lightning-input disabled={isReadOnly}
+                                                                        autocomplete="off"
+                                                                        value={fieldObj.filterInputData}
+                                                                        onchange={operatorValueChangeHanlder}
+                                                                        data-in={index} type="date"></lightning-input>
+                                                                </template>
+                                                                <template if:true={fieldObj.isDataTimeField}>
+                                                                    <lightning-input disabled={isReadOnly}
+                                                                        value={fieldObj.filterInputData}
+                                                                        onchange={operatorValueChangeHanlder}
+                                                                        data-in={index} type="datetime">
+                                                                    </lightning-input>
+                                                                </template>
+                                                            </div>
+                                                        </template>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <template if:false={fieldObj.required}>
+                                                        <template if:true={scheduleDetails}>
+                                                            <template if:true={scheduleDetails.allDetails}>
+                                                                <template if:true={isReadOnly}>
+                                                                    <lightning-icon class="icon-gray"
+                                                                        icon-name="utility:delete"
+                                                                        alternative-text="Delete" title="Delete"
+                                                                        data-in={index} size="x-small"></lightning-icon>
+                                                                </template>
+                                                                <template if:false={isReadOnly}>
+                                                                    <lightning-icon class="cursor-pointer"
+                                                                        variant="success" icon-name="utility:delete"
+                                                                        alternative-text="Delete" title="Delete"
+                                                                        onclick={deleteRowHandler} data-in={index}
+                                                                        size="x-small"></lightning-icon>
+                                                                </template>
+                                                            </template>
+                                                        </template>
+                                                        <template if:false={scheduleDetails}>
+                                                            <lightning-icon class="cursor-pointer" variant="success"
+                                                                icon-name="utility:delete" alternative-text="Delete"
+                                                                title="Delete" onclick={deleteRowHandler}
+                                                                data-in={index} size="x-small"></lightning-icon>
+                                                        </template>
+                                                    </template>
+                                                </td>
+                                            </tr>
+                                        </template>
+                                    </template>
+                                </tbody>
+                            </table>
+                            <div class="slds-page-header__col-actions margin-top">
+                                <div class="slds-page-header__controls">
+                                    <div class="slds-page-header__control">
+                                        <template if:true={scheduleDetails}>
+                                            <template if:true={scheduleDetails.allDetails}>
+                                                <template if:true={isReadOnly}>
+                                                    <button onclick={newMappingHandler}
+                                                        class="slds-button slds-button_neutral new-map" disabled>
+                                                        <lightning-icon icon-name="utility:add" size="xx-small"
+                                                            variant="base" class="padding-bottom"></lightning-icon>
+                                                        &nbsp;
+                                                        New Mapping
+                                                    </button>
+                                                </template>
+                                                <template if:false={isReadOnly}>
+                                                    <button onclick={newMappingHandler}
+                                                        class="slds-button slds-button_neutral newmap-btn"
+                                                        disabled={showHideObj.testMapBtn}>
+                                                        <lightning-icon icon-name="utility:add" variant="success"
+                                                            size="xx-small" class="padding-bottom"></lightning-icon>
+                                                        &nbsp;
+                                                        New Mapping
+                                                    </button>
+                                                </template>
+                                            </template>
+                                        </template>
+                                        <template if:false={scheduleDetails}>
+                                            <template if:true={showHideObj.testMapBtn}>
+                                                <button onclick={newMappingHandler}
+                                                    class="slds-button slds-button_neutral new-map1"
+                                                    disabled={showHideObj.testMapBtn}>
+                                                    <lightning-icon icon-name="utility:add" variant="success"
+                                                        size="xx-small" class="padding-bottom"></lightning-icon>&nbsp;
+                                                    New Mapping
+                                                </button>
+                                            </template>
+                                            <template if:false={showHideObj.testMapBtn}>
+                                                <button onclick={newMappingHandler}
+                                                    class="slds-button slds-button_neutral newmap-btn">
+                                                    <lightning-icon icon-name="utility:add" variant="success"
+                                                        size="xx-small" class="padding-bottom"></lightning-icon>&nbsp;
+                                                    New Mapping
+                                                </button>
+                                            </template>
+                                        </template>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="box-container">
+                                <div class="d-flex">
+                                    <template if:true={scheduleDetails}>
+                                        <template if:true={scheduleDetails.allDetails}>
+                                            <template if:true={isReadOnly}>
+                                                <button class="slds-button slds-button_brand" disabled
+                                                    onclick={testMappingHandler}>Test Mapping</button>
+                                            </template>
+                                            <template if:false={isReadOnly}>
+                                                <button class="slds-button slds-button_brand"
+                                                    disabled={showHideObj.testMapBtn} onclick={testMappingHandler}>Test
+                                                    Mapping</button>
+                                            </template>
+                                        </template>
+                                    </template>
+                                    <template if:false={scheduleDetails}>
+                                        <button class="slds-button slds-button_brand" disabled={showHideObj.testMapBtn}
+                                            onclick={testMappingHandler}>Test Mapping</button>
+                                        <div class="align-self-center text-light text-grey">&nbsp;&nbsp;As of
+                                            {currentDateTime.currentDate} at {currentDateTime.currentTime}
+                                        </div>
+                                    </template>
+                                </div>
+                                <template if:true={showHideObj.sfRecordCount}>
+                                    <div class="pt-8 test-mapping-data">
+                                        <p>
+                                            <span>Salesforce records found</span>
+                                            {sforceRecountCount}
+                                        </p>
+                                    </div>
+                                </template>
+                            </div>
+                        </div>
+                        <footer class="slds-modal__footer">
+                            <div class="footer-btn">
+                                <template if:false={tabHideActive.footerBtnFlag}>
+                                    <button class="slds-button slds-button_neutral"
+                                        onclick={cancelHandler}>Cancel</button>
+                                    <button class="slds-button slds-button_brand" onclick={nextHandler}>Next</button>
+                                </template>
+                            </div>
+                        </footer>
+                    </div>
+                    <div id="tab-default-schedule" class={tabHideActive.scheduleShowHide} role="tabpanel"
+                        aria-labelledby="tab-default-schedule__item">
+                        <div class="schedule-content">
+                            <div class="custom-row">
+                                <div class="align-label">
+                                    <label class="custom-label" for="select-01">Frequency</label>
+                                </div>
+                                <template if:true={scheduleDetails}>
+                                    <template if:true={scheduleDetails.allDetails}>
+                                        <template if:true={isReadOnly}>
+                                            <lightning-combobox class="marginTop width" options={frequencyOption}
+                                                value={scheduleDetails.allDetails.frequency} data-freq="frqvalue"
+                                                disabled></lightning-combobox>
+                                        </template>
+                                        <template if:false={isReadOnly}>
+                                            <lightning-combobox class="marginTop width" options={frequencyOption}
+                                                value={scheduleDetails.allDetails.frequency} data-freq="frqvalue">
+                                            </lightning-combobox>
+                                        </template>
+                                    </template>
+                                </template>
+                                <template if:false={scheduleDetails}>
+                                    <lightning-combobox class="marginTop width" options={frequencyOption}
+                                        data-freq="frqvalue"></lightning-combobox>
+                                </template>
+                            </div>
+                            <div class="custom-row">
+                                <div class="align-label">
+                                    <label class="custom-label" for="select-01">Time</label>
+                                </div>
+                                <template if:true={scheduleDetails}>
+                                    <template if:true={scheduleDetails.allDetails}>
+                                        <template if:true={isReadOnly}>
+                                            <lightning-input class="marginTop" type="time"
+                                                value={scheduleDetails.allDetails.startTime}
+                                                onchange={timeChangeHandler} disabled></lightning-input>
+                                            <lightning-combobox class="marginTop padding-width" data-timezone="time"
+                                                value={scheduleDetails.allDetails.timezone} options={timeZoneOption}
+                                                disabled></lightning-combobox>
+                                        </template>
+                                        <template if:false={isReadOnly}>
+                                            <lightning-input class="marginTop" type="time"
+                                                value={scheduleDetails.allDetails.startTime}
+                                                onchange={timeChangeHandler}></lightning-input>
+                                            <lightning-combobox class="marginTop padding-width" data-timezone="time"
+                                                value={scheduleDetails.allDetails.timezone} options={timeZoneOption}>
+                                            </lightning-combobox>
+                                        </template>
+                                    </template>
+                                </template>
+                                <template if:false={scheduleDetails}>
+                                    <lightning-input class="marginTop" type="time" onchange={timeChangeHandler}>
+                                    </lightning-input>
+                                    <lightning-combobox class="marginTop padding-width" data-timezone="time"
+                                        options={timeZoneOption}></lightning-combobox>
+                                </template>
+                            </div>
+                            <div class="custom-row">
+                                <div class="align-label">
+                                    <label class="custom-label" for="date-input-id">Start Date</label>
+                                </div>
+                                <template if:true={scheduleDetails}>
+                                    <template if:true={scheduleDetails.allDetails}>
+                                        <template if:true={isReadOnly}>
+                                            <lightning-input class="date-btn marginTop" type="date" name="input1"
+                                                value={scheduleDetails.allDetails.startDate}
+                                                min={scheduleDetails.allDetails.startDate} date-style="short"
+                                                data-startdate="startdate" disabled>
+                                            </lightning-input>
+                                        </template>
+                                        <template if:false={isReadOnly}>
+                                            <lightning-input class="date-btn marginTop" type="date" name="input1"
+                                                value={scheduleDetails.allDetails.startDate}
+                                                min={scheduleDetails.allDetails.startDate} autocomplete="off"
+                                                date-style="short" data-startdate="startdate">
+                                            </lightning-input>
+                                        </template>
+                                    </template>
+                                </template>
+                                <template if:false={scheduleDetails}>
+                                    <lightning-input class="date-btn marginTop" type="date" name="input1"
+                                        min={currentDateTime.currentDate} date-style="short" autocomplete="off"
+                                        data-startdate="startdate">
+                                    </lightning-input>
+                                </template>
+                            </div>
+                            <div class="custom-row">
+                                <div class="align-label">
+                                    <label class="custom-label" for="select-01">Enabled</label>
+                                </div>
+                                <div class="">
+                                    <div class="p-togglebutton-wrap">
+                                        <label class="p-toggle-switch">
+                                            <template if:true={localScheduleDetails}>
+                                                <template if:true={localScheduleDetails.allDetails}>
+                                                    <template if:true={isReadOnly}>
+                                                        <input type="checkbox"
+                                                            checked={localScheduleDetails.allDetails.active}
+                                                            data-active="isActive" disabled>
+                                                    </template>
+                                                    <template if:false={isReadOnly}>
+                                                        <input type="checkbox"
+                                                            checked={localScheduleDetails.allDetails.active}
+                                                            onchange={updateEnabled} data-active="isActive">
+                                                    </template>
+                                                </template>
+                                            </template>
+                                            <template if:false={localScheduleDetails}>
+                                                <input type="checkbox" data-active="isActive">
+                                            </template>
+                                            <span class="slider round"></span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <footer class="slds-modal__footer">
+                            <button class="slds-button slds-button_neutral pull-left" onclick={backmappingHandler}>
+                                <span class="font-size">
+                                    ‹</span>&nbsp;&nbsp; Back to Field Mapping
+                            </button>
+                            <button class="slds-button slds-button_neutral" onclick={cancelHandler}>Cancel</button>
+                            <template if:true={scheduleDetails}>
+                                <template if:true={scheduleDetails.allDetails}>
+                                    <template if:true={isReadOnly}>
+                                        <button class="slds-button slds-button_brand" disabled>Save
+                                            Changes</button>
+                                    </template>
+                                    <template if:false={isReadOnly}>
+                                        <button class="slds-button slds-button_brand" onclick={saveChangesHandler}>Save
+                                            Changes</button>
+                                    </template>
+                                </template>
+                            </template>
+                            <template if:false={scheduleDetails}>
+                                <button class="slds-button slds-button_brand" onclick={saveChangesHandler}>Save
+                                    Changes</button>
+                            </template>
+
+                        </footer>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>

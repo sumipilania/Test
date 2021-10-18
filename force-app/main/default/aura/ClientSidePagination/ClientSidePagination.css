@@ -1,0 +1,16 @@
+.THIS {
+}
+
+.THIS .button {
+  background-color: #0070b9;
+    border: none;
+    color: white;
+    padding: 7px 25px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 12px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 8px;
+}

@@ -1,0 +1,39 @@
+.mainClass{
+    background-color: whitesmoke;
+}
+.pencilIcon{
+    display: none;
+    height:20px; 
+    width:20px; 
+    float: right;
+}
+.sortIcon{
+   display: none;
+    height:20px; 
+    width:20px; 
+    float: right;
+}
+th:hover .pencilIcon {
+    display: inline-block;
+  }
+  th:hover .sortIcon {
+    display: inline-block;
+    background-color: blue;
+  }
+th{
+  max-width: 50px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+input[type=text] {
+  width: 100%;
+}
+
+.textClass{
+  background-color: lightgoldenrodyellow;
+}
+  th:hover {
+    background-color: white !important;
+  }

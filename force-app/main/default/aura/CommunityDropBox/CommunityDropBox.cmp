@@ -1,0 +1,100 @@
+<aura:component controller="CommunityDropBoxApexController" implements="lightning:isUrlAddressable,force:appHostable,forceCommunity:availableForAllPageTypes" access="global" > 
+    <aura:handler name="init" value="{!this}" action="{!c.accessToken}"/>	<!-- Constructor Call at a time Component Loading Call Apex Controller -->
+    <aura:attribute name="initlizeFlag" type="Boolean" default="false"/>  <!-- Complete all processing than show Data -->
+    <aura:attribute name="fileFolderList" type="List"/>  <!-- Stor All file and folder list -->
+    <aura:attribute name="breadCrumb" type="List" default="[{name:'Home', id:''}]"/>  <!-- Bread crumb List -->
+    <aura:attribute name="pathId" type="String" default=""/> <!-- Store id of folder -->
+    <aura:attribute name="breadFolId" type="String" default=""/><!-- Store id of bread crumb folder -->
+    <aura:attribute name="folderPath" type="String" default=""/> <!-- Store folder path for create folder -->
+    <aura:attribute name="isOpen" type="Boolean" default="false"/><!-- show chilc component -->
+    <aura:attribute name="createFolderFlag" type="Boolean" default="false"/><!--handler event of create folder -->
+    <aura:attribute name="uploadFolderFlag" type="Boolean" default="false"/><!-- handler event of upload file -->
+    <aura:attribute name="Spinner" type="boolean" default="false"/>	<!-- Spinner Show and Hide -->
+    <aura:handler event="aura:waiting" action="{!c.showSpinner}"/>	<!-- Show Spinner According When Complete Apex Controller Prcessiong done-->
+    <aura:handler event="aura:doneWaiting" action="{!c.hideSpinner}"/>	<!-- After Complete Apex Controller Processing Done -->
+    <aura:attribute name="childAttr" type="Boolean"/><!-- show upload modal -->
+    <aura:attribute name="childAttrFolder" type="Boolean"/><!-- show create folder modal -->
+    <aura:handler name="change" value="{!v.childAttr}" action="{!c.onChildAttrChange}"/><!-- call action when upload file -->
+    <aura:handler name="change" value="{!v.childAttrFolder}" action="{!c.onChildAttrFolderChange}"/><!-- call action when create folder-->
+    
+    <!-- Spinner Handler -->
+    <aura:if isTrue="{!v.Spinner}">
+        <div aura:id="spinnerId" class="slds-spinner_container">
+            <div class="slds-spinner--brand  slds-spinner slds-spinner--large slds-is-relative" role="alert">
+                <span class="slds-assistive-text">Loading</span>
+                <div class="slds-spinner__dot-a"></div>
+                <div class="slds-spinner__dot-b"></div>
+            </div>
+        </div>
+    </aura:if>
+    
+    <ul class="breadcrumb">            
+        <aura:iteration items="{!v.breadCrumb}" var="bKey" >             
+          <li>  <a  class="breadCrumb" onclick="{!c.breadCrumMthod}" style="width:100%;" data-index="{!bKey.id}">{!bKey.name}</a></li>       
+        </aura:iteration>
+    </ul><br/>
+    <div class="mainPage">
+        <aura:if isTrue="{!v.initlizeFlag}">
+            
+            
+            
+            <!-- All file and folder handler in table -->
+            <div class="slds-align_absolute-center">
+                <table class="tableClass">
+                    <!-- Breadcrumb Handler -->
+                    
+                    
+                    <tr class="tbHeader">
+                        <th class="th">File/Folder Icon</th>
+                        <th>File/Folder Name</th>
+                        <th>Size</th>
+                        <th>Delete</th>
+                    </tr>
+                    <aura:iteration items="{!v.fileFolderList}" var="folObj"><br/>
+                        <tr>  
+                            <td class="td">
+                                <aura:if isTrue="{!folObj.tag=='folder'}">
+                                    <img src="{!$Resource.Icons + '/ImageIcon/folder.png'}" width="30" height="30"/>
+                                    <aura:set attribute="else">
+                                        <img src="{!$Resource.Icons + '/ImageIcon/file.png'}" width="30" height="30"/>
+                                    </aura:set>
+                                </aura:if>                                        
+                            </td>
+                            <td>
+                                <aura:if isTrue="{!folObj.tag=='folder'}">
+                                    <h1 class="fileFolder">  <a onclick="{!c.filesAndFolder}" style="width:100%;" data-id="{!folObj.id}" data-name="{!folObj.name}" data-path="{!folObj.path_display}">{!folObj.name}</a></h1> 
+                                    <aura:set attribute="else">
+                                        <h1 class="fileFolder">  <a onclick="{!c.fileDownload}" style="width:100%;" data-index="{!folObj.id}" >{!folObj.name}</a></h1> 
+                                    </aura:set>
+                                </aura:if>  
+                            </td>
+                            <td>
+                                <aura:if isTrue="{!folObj.tag=='file'}">
+                                    <h1 class="fileFolder">{!folObj.size}) KB</h1>
+                                </aura:if>                             
+                            </td>
+                            <td>
+                                <img src="{!$Resource.Icons + '/ImageIcon/delete.png'}" onclick="{!c.deleteHandler}" data-index="{!folObj.path_display}" width="30" height="30" style="cursor: pointer;"/>
+                            </td>                
+                        </tr>
+                    </aura:iteration>
+                    
+                    <!-- Empty Folder -->
+                    <aura:if isTrue="{!v.fileFolderList.length==0}">
+                        <h1 class="fileFolder" align="center">Empty Folder</h1>
+                    </aura:if>
+                </table><br/><br/><br/>
+            </div>
+            <!-- Button Handler Create and Upload-->
+            <div class="btn">   
+                <lightning:button   variant="brand" label="Create Folder" onclick="{!c.createFolderHandler}"/>                 
+                <lightning:button   variant="brand" label="Upload File" onclick="{!c.uploadFileHandler}"/>                 
+            </div>
+            
+            <!-- Child Component Modal -->
+            <aura:if isTrue="{!v.isOpen}">
+                <c:PopUpModalUploadCreate openModel ="{!v.uploadFolderFlag}" parentId="{!v.breadFolId}" childAccessToken="{!v.accToken}" childRes="{!v.childAttr}" childResFolder="{!v.childAttrFolder}" createFolder="{!v.createFolderFlag}" folderPathChild="{!v.folderPath}"/>
+            </aura:if>  
+        </aura:if>
+    </div>
+</aura:component>

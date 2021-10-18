@@ -1,0 +1,11 @@
+<apex:page controller="DataDisplayController">
+    <apex:form >
+    <apex:actionFunction name="saveAttachement" action="{!saveAttachement}" rerender="allPanel"/>
+        <script>
+          
+             saveAttachement();
+        //  window.location.href = 'https://sumit-pilaniya-light9domain-dev-ed.my.salesforce.com/apex/PdfGeneratorTemplate';
+           
+        </script>
+  </apex:form>
+</apex:page>

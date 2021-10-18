@@ -1,0 +1,23 @@
+<apex:page controller="A">
+    <apex:form >
+        <apex:panelGrid columns="3" id="abcd">
+            <apex:selectList id="sel1" value="{!leftSelected}" multiselect="true" style="width:100px" size="5">
+                <apex:selectOptions value="{!DeselectedValues}" />
+            </apex:selectList>
+             
+            <apex:panelGroup >
+                <br/>
+                <apex:image styleClass="picklistArrowRight" value="/s.gif">
+                    <apex:actionSupport event="onclick" action="{!getSelect}" reRender="abcd"/>
+                </apex:image>
+                <br/><br/>
+                <apex:image styleClass="picklistArrowLeft" value="/s.gif">
+                    <apex:actionSupport event="onclick" action="{!getDeselect}" reRender="abcd"/>
+                </apex:image>
+            </apex:panelGroup>
+            <apex:selectList id="sel2" value="{!rightSelected}" multiselect="true" style="width:100px" size="5">
+                <apex:selectOptions value="{!SelectedValues}" />
+            </apex:selectList>
+        </apex:panelGrid>
+    </apex:form>
+</apex:page>

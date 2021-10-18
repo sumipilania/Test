@@ -1,0 +1,25 @@
+<template>
+    <header class="slds-modal__header">
+        <h2 id="modal-heading-01" class="slds-modal__title slds-hyphenate">Lead Generate</h2>
+    </header>
+    <template if:false={nextScreenShowHide}>
+        <div class="radioClass">
+            <lightning-radio-group
+                name="radioButtonGroup"
+                label="Select Type"
+                options={radioOption}
+                onchange={handleRadioChange}
+                required>
+        </lightning-radio-group>
+        </div>
+    </template>
+    <template if:true={nextScreenShowHide}>
+        Next Screen
+        </template>
+    <footer class="slds-modal__footer">
+        <button class="slds-button slds-button_neutral" onclick={cancel}>Cancel</button>
+        <button class="slds-button slds-button_brand" onclick={nextHandler}>
+            Next
+        </button>
+    </footer>
+</template>

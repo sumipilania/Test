@@ -1,0 +1,145 @@
+<template>
+    <template if:true={hideShowBlock.recordNotFound}>
+        <template if:true={hideShowBlock.isSpinner}>
+            <lightning-spinner alternative-text="Loading" size="small"></lightning-spinner>
+        </template>
+    
+        <template if:true={hideShowBlock.isShowPicklist}>
+            <div>
+                <lightning-combobox
+                    name="progress"
+                    label="Select Member Plan"
+                    placeholder="Select Member"
+                    options={memberPlanoptions}
+                    value ={optionVal}
+                    onchange={handleChange} ></lightning-combobox>
+            </div>
+        </template><br/>
+    
+        <template iterator:it={sectionWithFields}>
+            <lightning-record-view-form record-id={memPlanRecId} object-api-name={memObjApiName} key={it.value.sectionName}>
+                <template if:true={it.first}>
+                    <div class="slds-clearfix slds-m-bottom_small slds-page-header" key={it.first} dropzone="div">
+                        <div class="canvas-element" closertotopclass="canvas-element--closer-to-top">
+                            <div class="slds-media">
+                                <div class="slds-media__body slds-clearfix" dropzone="mediaObject body">
+                                    <div class="canvas-element" closertotopclass="canvas-element--closer-to-top">
+                                        <div class="slds-page-header__title slds-text-heading_small">
+                                            <lightning-icon icon-name="custom:custom42" title="custom42"></lightning-icon>
+                                            &ensp;
+                                            {it.value.sectionName}
+                                        </div>
+                                    </div>
+                                    <div class="canvas-element" closertotopclass="canvas-element--closer-to-top">
+                                        <ul class="slds-list_horizontal slds-clearfix"></ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="demo-only demo-only--sizing slds-grid slds-wrap">
+                        <template for:each={it.value.fieldsApiName} for:item="field">
+                            <div class="slds-size_1-of-2" key={it.value.sectionName}>
+                                <lightning-output-field field-name={field.fieldApiName}></lightning-output-field>
+                            </div>
+                        </template>
+                    </div>
+                </template>
+                <template if:false={it.first}>
+                    <h3 class="slds-section__title">
+                        <button aria-controls="section" aria-expanded="true" class="slds-button slds-section__title-action">
+                            <lightning-icon icon-name={it.value.iconName} size="small" onclick={sectionHanlder} 
+                            data-sectionid={it.value.sectionId}>
+                            </lightning-icon>&ensp;
+                            <span class="slds-truncate" title="Diagnoses">{it.value.sectionName}</span>
+                        </button>
+                    </h3>
+                    <template if:true={it.value.isExpand}>
+                        <div class="demo-only demo-only--sizing slds-grid slds-wrap">
+                            <template for:each={it.value.fieldsApiName} for:item="field">
+                                <div class="slds-size_1-of-2" key={it.value.sectionName}>
+                                    <lightning-output-field field-name={field.fieldApiName}></lightning-output-field>
+                                </div>
+                            </template>
+                        </div>
+                    </template>
+                </template>
+            </lightning-record-view-form>
+        </template>
+            <div class="canvas-element" closertotopclass="canvas-element--closer-to-top">
+                <div class="slds-card slds-card_boundary">
+                    <div class="slds-card__header slds-clearfix slds-grid">
+                        <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                            <div class="slds-grid slds-grid_vertical-align-center slds-size_3-of-4 slds-medium-size_2-of-3">
+                                <lightning-icon icon-name="standard:employee_contact" alternative-text="" title="">
+                                </lightning-icon>&ensp;
+                                <div class="slds-media__body">
+                                    <h2><a class="slds-card__header-link slds-truncate" href="javascript:void(0);"><span
+                                                class="slds-text-heading_small">Coverage Benefits (10)</span></a>
+                                    </h2>
+                                </div>
+                            </div>
+                        </header>
+                        <div class="slds-no-flex" style="display: contents;" dropzone="card actions">
+                            <div class="canvas-element--inline">
+                                <div class="canvas-element" closertotopclass="canvas-element--closer-to-top">
+                                    <template if:false={hideShowBlock.isEditable}>
+                                        <button class="slds-button slds-theme_neutral   slds-button_neutral" onclick={copyHandler}><span>Copy</span></button>
+                                    </template>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <template if:true={coverageBenifitsRec}>
+                        <div class="slds-grid slds-wrap" style="height: 11rem; overflow: auto;">
+                            <template for:each={coverageBenifitsRec} for:item="covObj">
+                                <div class="slds-size_1-of-4" style = "padding-left: 1rem; padding-right: 0.5rem;" key={covObj.Id}>
+                                    <template if:false={hideShowBlock.isEditable}>
+                                        <h3 class="slds-tile__title slds-truncate" title="Han Solo In-Network Inpatient"><a href="javascript:void(0);">{covObj.Name}</a></h3>
+                                        Network Status : {covObj.Network_Status__c}
+                                        Level of Care : {covObj.Dollar_Limit__c}
+                                        Co-Pay : {covObj.Network_Status__c}
+                                        Dollar Limit : {covObj.Dollar_Limit__c}
+                                        Day Limit : {covObj.Network_Status__c}
+                                        Deductible Applied to Level of Care : {covObj.Dollar_Limit__c}
+                                        Stop Loss Applied to Level of Care : {covObj.Network_Status__c}
+                                    </template>
+                                    <template if:true={hideShowBlock.isEditable}>
+                                        <div style="border-style: groove;padding: 5px;">
+                                            <lightning-input type="text" label="Name" value ={covObj.Name} onchange={editHandler} data-id={covObj.Id} data-field="Name"></lightning-input>
+                                            <lightning-input type="text" label="Network Status" value ={covObj.Network_Status__c} onchange={editHandler} data-id={covObj.Id} data-field="Network_Status__c"></lightning-input>
+                                            <lightning-input type="text" label="Level of Care" value ={covObj.Dollar_Limit__c} onchange={editHandler} data-id={covObj.Id} data-field="Dollar_Limit__c"></lightning-input>
+                                            <lightning-input type="text" label="Co-Pay" value ={covObj.Network_Status__c} onchange={editHandler} data-id={covObj.Id} data-field="Network_Status__c"></lightning-input>
+                                            <lightning-input type="text" label="Dollar Limit" value ={covObj.Dollar_Limit__c} onchange={editHandler} data-id={covObj.Id} data-field="Dollar_Limit__c"></lightning-input>
+                                            <lightning-input type="text" label="Day Limit" value ={covObj.Network_Status__c} onchange={editHandler} data-id={covObj.Id} data-field="Network_Status__c"></lightning-input>
+                                            <lightning-input type="text" label="Deductible Applied to Level of Care" value ={covObj.Network_Status__c} onchange={editHandler} data-id={covObj.Id} data-field="Network_Status__c"></lightning-input>
+                                            <lightning-input type="text" label="Stop Loss Applied to Level of Care" value ={covObj.Dollar_Limit__c} onchange={editHandler} data-id={covObj.Id} data-field="Dollar_Limit__c"></lightning-input>
+                                        </div>
+                                    </template>
+                                </div>
+                            </template>
+                        </div><br/>
+                        <template if:true={hideShowBlock.isEditable}>
+                            <div class="slds-align_absolute-center">
+                                <lightning-button label="Save" onclick={saveHandler} class="slds-m-left_x-small"></lightning-button>
+                                <lightning-button label="Cancel"  onclick={cancelHandler} class="slds-m-left_x-small"></lightning-button>
+                            </div>
+                        </template>
+                    </template>
+    
+                    <div class="slds-card__footer slds-clearfix" dropzone="card footer">
+                        <div class="canvas-element--inline">
+                            <div class="canvas-element" closertotopclass="canvas-element--closer-to-top"><a target="_blank"
+                                    class="slds-text-link" href="">View All</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div> 
+        </template>
+
+        <template if:false={hideShowBlock.recordNotFound}>
+            <div>Record Not Found</div>
+        </template>
+ </template>

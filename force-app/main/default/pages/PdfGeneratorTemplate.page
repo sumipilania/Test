@@ -1,0 +1,3 @@
+<apex:page renderAs="pdf">
+   My name is sumit
+</apex:page>

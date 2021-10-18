@@ -1,0 +1,53 @@
+<apex:page controller="Step2">
+    
+    <apex:form >
+        <apex:PageBlock id="formId" > 
+            <h2 >
+                Select Object
+            </h2>
+            <apex:selectList value="{!selectedobj}" size="1" > 
+                <apex:selectOptions value="{!options}">   
+                </apex:selectOptions>
+                <apex:actionsupport event="onchange" action="{!getSelObjFields}"/>
+            </apex:selectList>
+            <apex:commandButton value="Reset" action="{!resetPage}" /><br/><br/><br/>
+            <h2 >
+                {!selectedobj}: Fields
+            </h2>
+            <table >
+                <tr >
+                    <td>
+                        <apex:selectList multiselect="true" style="width:200px;height:200px;" value="{!leftSelected}">
+                            <apex:selectOptions value="{!DeselectedValues}"> 
+                            </apex:selectOptions>
+                        </apex:selectList>
+                    </td>
+                    <td >
+                        <apex:panelGroup ><br/><br/>
+                            <apex:commandButton value="Add" action="{!getSelect}" reRender="formId"  />	
+                            <br/><br/>
+                            <apex:commandButton value="Remove" action="{!getDeselect}" reRender="formId"/>	
+                        </apex:panelGroup>
+                        
+                    </td>
+                    
+                    
+                    <td>
+                        <h2 >
+                            Select Field
+                        </h2> <br/>
+                        
+                        <apex:selectList value="{!rightSelected}" multiselect="true" style="width:200px;height:200px;" >
+                            <apex:selectOptions value="{!SelectedValues}" />
+                        </apex:selectList>
+                    </td>
+                    
+                    <td><br/>
+                        <apex:commandButton value="Process" style=" bottom:0; " />
+                        
+                    </td>
+                </tr>     
+            </table>
+        </apex:PageBlock>
+    </apex:form>
+</apex:page>

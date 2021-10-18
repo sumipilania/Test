@@ -1,0 +1,45 @@
+<template>
+  
+  <template if:true={showHideSpinner}>
+    <div class="demo-only" style="height:6rem">
+       <div class="slds-spinner_container">
+         <div role="status" class="slds-spinner slds-spinner_medium slds-spinner_brand">
+           <span class="slds-assistive-text">Loading</span>
+           <div class="slds-spinner__dot-a"></div>
+           <div class="slds-spinner__dot-b"></div>
+         </div>
+       </div>
+     </div>
+ </template>
+
+ <div class="modal-header slds-modal__header slds-size_1-of-1">
+  <h4 class="title slds-text-heading--medium">Metadata Deploy</h4>
+</div>
+
+<div class="slds-align_absolute-center">
+  <lightning-input type="file"
+    label="File Upload"
+    accept=".zip"
+    onchange={handleUpload}
+    ></lightning-input><br/>
+  <h2>{fileName}</h2></div><br/>
+
+<template if:true={deployOption} for:each={deployOption} for:item="obj"><br key={obj}/>
+  <div key={obj}  class="slds-grid slds-gutters slds-align_absolute-center">
+    {obj.label} : <lightning-input class="slds-p-left_large" key={obj} value = {obj.variableName} type="checkbox">
+    </lightning-input>
+  </div>
+</template>
+
+<lightning-combobox
+            label="Test Level"
+            options={testLevelOption}
+            value="NoTestRun"
+            onchange={handleChange} >
+</lightning-combobox>
+
+<lightning-input label="Run Tests" onchange={handleRunTest} value={runTest} name="runSpecific" type="text" disabled={runSpecificDisable}></lightning-input><br/>
+<div class="modal-footer slds-modal__footer slds-size_1-of-1">
+<lightning-button variant="brand" label="Upload" title="Primary action" onclick={handleSubmit} class="slds-m-left_x-small"></lightning-button>
+</div>
+</template>

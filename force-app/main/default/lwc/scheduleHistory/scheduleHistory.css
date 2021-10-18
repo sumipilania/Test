@@ -1,0 +1,99 @@
+.Btnback{
+    font-size: 25px;
+    margin-left: -4%;
+    margin-right: 3%;
+  }
+  .arrow {
+    border: solid #319b8d;
+    border-width: 0 2px 2px 0;
+    display: inline-block;
+    padding: 3.6px;
+  }
+  .left {
+    transform: rotate(135deg);
+    -webkit-transform: rotate(135deg);
+  }
+  .tabelData{
+    font-size: 15px;
+  }
+  th, td {
+    border: 1px solid rgb(243, 242, 242);
+  }
+  th{
+    border-bottom: 5px solid rgb(243, 242, 242);
+    user-select: none;
+  }
+  tr{
+    height: 3rem;
+  }
+  .mainheader{
+    display: flex;
+    margin-top: 5%;
+    margin-bottom: 2%;
+    margin-left: 3%;
+    width: 100%;
+    font-size: 22px;
+    font-weight: 700;
+  }
+  .customfooter{
+    font-size: 15px;
+  }
+  .showPanel{
+    font-size: 15px;
+    margin-left: 2%;
+  }
+  .footerDiv{
+    margin-top: 1%;
+    display: flex;
+  }
+  .navigationButtonContainer{
+    font-size: 15px;
+  }
+  .showComBox{
+    margin-top: -1.3rem;
+    max-width: 5rem; min-width: 5rem;
+  }
+  .navigationBack{
+    border: solid black;
+    border-width: 0 2px 2px 0;
+    display: inline-block;
+    padding: 2px;
+    transform: rotate(135deg);
+    -webkit-transform: rotate(135deg);
+  }
+  .navigationNext{
+    border: solid black;
+    border-width: 0 2px 2px 0;
+    display: inline-block;
+    padding: 2px;
+    transform: rotate(315deg);
+    -webkit-transform: rotate(315deg);
+  }
+  .icon-color {
+    filter: invert(52%) sepia(85%) saturate(336%) hue-rotate(123deg) brightness(83%) contrast(84%);
+  }
+  .capital-word {
+    text-transform: capitalize;
+  }
+  .cursor-initial {
+    cursor:initial;
+  }
+  .cursor-point {
+    cursor:pointer;
+  }
+  .display-block {
+    display: block;
+  }
+  .color-green {
+    color: green;
+  }
+  .color-red {
+    color: red;
+  }
+  .display {
+    display: flex;
+  }
+  .display-float {
+    float: right; 
+    display:flex;
+  }

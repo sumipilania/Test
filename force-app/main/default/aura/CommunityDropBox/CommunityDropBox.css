@@ -1,0 +1,89 @@
+.THIS {
+    background-color:#8bbfe0!important;
+}
+.THIS .fileFolder {
+    color: blue;
+    font-size: 20px;
+    
+}
+.THIS .tableClass {
+    width: 95%;
+    margin-left: 30px;
+    margin-top: 2px;
+    background-color: #f3f2f1;
+}
+.THIS .tbHeader {
+        padding: 10px;
+    box-shadow: 5px 5px #888888;
+    background-color: #92bbe0;
+    font-size: 15px;
+}
+.THIS .btn{
+    text-align: center;
+    padding-bottom: 30px;
+    margin-top: 20px;
+}
+.THIS .home{
+    color: blue;
+    font-size: 20px;
+    margin-left: 30px;
+}
+
+.THIS .th {
+   padding-left: 30px;
+}
+.THIS .td {
+   padding-left: 30px;
+}
+
+.THIS.breadcrumb { 
+  list-style: none; 
+  overflow: hidden; 
+     margin-top: 50px;
+  font: 18px Sans-Serif;
+}
+.THIS.breadcrumb li { 
+  float: left; 
+}
+.THIS.breadcrumb li a {
+  color: white;
+  text-decoration: none; 
+  padding: 10px 0 10px 20px;
+  background: brown; /* fallback color */
+  background: #286ca7; 
+  position: relative; 
+  display: block;
+  float: left;
+  margin-left: 60px;
+    text-align: center;
+}  
+
+.THIS.breadcrumb li a::after { 
+  content: " "; 
+  display: block; 
+  width: 0; 
+  height: 0;
+  border-top: 50px solid transparent; /* Go big on the size, and let overflow hide */
+  border-bottom: 50px solid transparent;
+  border-left: 30px solid #346794;
+  position: absolute;
+  top: 50%;
+  margin-top: -50px; 
+  left: 100%;
+  z-index: 2; 
+}
+.THIS.breadcrumb li a::before { 
+  content: " "; 
+  display: block; 
+  width: 0; 
+  height: 0;
+  border-top: 50px solid transparent;       
+  border-bottom: 50px solid transparent;
+  border-left: 30px solid white;
+  position: absolute;
+  top: 50%;
+  margin-top: -50px; 
+  margin-left: 1px;
+  left: 100%;
+  z-index: 1; 
+}

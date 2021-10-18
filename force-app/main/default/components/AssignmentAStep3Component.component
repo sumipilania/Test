@@ -1,0 +1,80 @@
+<apex:component controller="AssignmentAStep3Component" allowDML="true"  id="CompId">
+    <apex:attribute name="SelectObj" description="The type of Object we are viewing." type="String" assignTo="{!queryObject}"  />
+    <apex:attribute name="Selectfields" description="The type of query we are viewing." type="String" assignTo="{!queryField}" />
+    <apex:attribute name="sObjField" description="fetch list of field" type="String[]" assignTo="{!fieldList}" />
+    
+  <apex:sectionHeader >
+       
+      queryObject  === >>> {!queryObject}<br/>
+    queryField  ===>> {!queryField}<br/>
+      fieldList  ===>> {!fieldList}<br/>
+      wrapperRecordList ===>>> {!wrapperRecordList}
+    </apex:sectionHeader>
+    
+    
+    <script type="text/javascript">
+    function selectAllCheckboxes(obj,receivedRecID){
+        
+        var inputCheckBox = document.getElementsByTagName("input");                  
+        for(var i=0; i<inputCheckBox.length; i++){          
+            if(inputCheckBox[i].id.indexOf(receivedRecID)!=-1){                                     
+                inputCheckBox[i].checked = obj.checked;
+            }
+            
+        }
+        
+    }
+    
+    function facetHeaderUnchecked() {
+        $('[id$=facetHeaderId]').removeAttr('checked');
+    }
+    </script>
+    <apex:form id="formId" >
+        <apex:actionFunction name="refreshPageSize" action="{!refreshPageSize}"  reRender="pgblock" id="funId"/>
+        <apex:pageBlock id="pgblock" >
+            <apex:outputPanel layout="block" style="overflow:auto;height:300px;width:1600px;">
+                <apex:commandButton action="{!if(queryObject='Contact', URLFOR($Action.Contact.NewContact), URLFOR($Action[queryObject].New))}" value="New Record" /> &nbsp;&nbsp;
+                <apex:commandButton action="{!deleteSelectedRec}" value="Delete Selected" />
+                <apex:pageBlockTable value="{!wrapperRecordList}" var="wrapObj"> 
+                    <apex:column >
+                        <apex:facet name="header">
+                            <apex:inputCheckbox id="facetHeaderId" onclick="selectAllCheckboxes(this,'inputId')" />
+                        </apex:facet>
+                        <apex:inputCheckbox value="{!wrapObj.selected}" onclick="facetHeaderUnchecked();" id="inputId"/>
+                    </apex:column>
+                    <apex:column headerValue="Action">
+                        <apex:outputlink value="https://ap15.salesforce.com/{!wrapObj.sobjecIns.Id}/e?retURL=%2F{!wrapObj.sobjecIns.Id}" style="color:#015ba7;text-decoration:none;" >Edit |</apex:outputlink>
+                        <apex:commandlink value="Del" action="{!deleteSpecificRec}" style="color:#015ba7;text-decoration:none;">
+                            <apex:param name="rId" value="{!wrapObj.sobjecIns.Id}" assignTo="{!rId}"/>
+                        </apex:commandlink>
+                    </apex:column>
+                    <apex:repeat value="{!fieldList}" var="fieldItem">
+                        <apex:column value="{!wrapObj.sobjecIns[fieldItem]}"/>
+                    </apex:repeat>
+                </apex:pageBlockTable> 
+            </apex:outputPanel><br/>
+            <apex:outputPanel layout="block" >
+                <apex:selectList value="{!size}" multiselect="false" size="1" onchange="refreshPageSize();" style="float:right;" title="No of Records">
+                    <apex:selectOptions value="{!paginationSizeOptions}"/>
+                </apex:selectList>
+                   
+ 
+               <!--     <apex:commandButton reRender="formId" value="First" action="{!setCon.first}" disabled="{!!setCon.hasPrevious}" title="First Page" /> 
+                    <apex:commandButton reRender="formId" value="Previous" action="{!setCon.previous}" disabled="{!!setCon.hasPrevious}" title="Previous Page"/> 
+                    <apex:commandButton reRender="formId" value="Next" action="{!setCon.next}" disabled="{!!setCon.hasNext}" title="Next Page"/> 
+                    <apex:commandButton reRender="formId" value="Last" action="{!setCon.last}" disabled="{!!setCon.hasNext}" title="Last Page"/> -->
+                    
+                
+       <apex:commandButton value="First" reRender="pgblock" action="{!first}" disabled="{!NOT(hasPrevious)}"/>
+          <apex:commandButton value="Previous" rerender="pgblock" action="{!previous}" disabled="{!NOT(hasPrevious)}" />
+          <apex:commandButton value="Next" rerender="pgblock" action="{!next}" disabled="{!NOT(hasNext)}" />
+          <apex:commandButton value="Last" rerender="pgblock" action="{!last}" disabled="{!NOT(hasNext)}" /> 
+             
+                
+                 Page: <apex:inputText style="width:20px;" value="{!setCon.pageNumber}" rendered="true"  />of {!CEILING(noOfRecords/size)}
+                <!-- Page: <apex:inputText style="width:20px;" value="{!pageNumber}" rendered="true"  /> {!totalPages}&nbsp; -->
+                
+            </apex:outputPanel>
+        </apex:pageBlock>
+    </apex:form>
+</apex:component>

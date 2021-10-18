@@ -1,0 +1,104 @@
+<template>
+    <template if:true={ShowHideModal}>
+        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true"
+            aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <!-- modal header start -->
+                <header class="slds-modal__header">
+                    <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse"
+                        title="Close" onclick={closeModal}>
+                        <lightning-icon icon-name="utility:close" alternative-text="close" variant="inverse"
+                            size="small"></lightning-icon>
+                        <span class="slds-assistive-text">Close</span>
+                    </button>
+                    <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Case Merge</h2>
+                </header>
+                <!-- modal body start -->
+                <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                    <template if:true={firstPage}>
+                        <table class="slds-table slds-table_cell-buffer slds-table_bordered">
+                            <thead>
+                                <tr class="slds-line-height_reset">
+                                    <template for:each={headerList} for:item="header">
+                                        <th class="" scope="col" key={header}>
+                                            <div class="slds-truncate" title="Name">{header.fieldLabel}</div>
+                                        </th>
+                                    </template>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <template if:true={allRecordList} for:each={allRecordList} for:item="recObj">
+                                    <tr key={recObj.Id}>
+                                        <th >
+                                            <div>
+                                                <lightning-input class="checkBoxClass" onchange={selectHandle} value = {recObj.Id} type="checkbox" data-id={recObj.Id} checked={recObj.isSelected}></lightning-input>
+                                            </div>
+                                        </th>
+                                        <template if:true={recObj.values} for:each={recObj.values} for:item="rec">
+                                        <th key={rec}>
+                                            <div>{rec}</div>
+                                        </th>
+                                      
+                                </template>
+                                    </tr>
+                                </template>
+                            </tbody>
+                        </table>
+                    </template>
+            <!--First Page End-->
+            <!--Second Page Start-->
+                    <template if:true={secondPage}>
+                        <table class="slds-table slds-table_cell-buffer slds-table_bordered">
+                            <template for:each={mergeRecordList} for:item="mergeObj">
+                            <tbody key={mergeObj}>
+                                    <tr >
+                                        <th >
+                                            <div>{mergeObj.fieldApi}</div>
+                                        </th>
+                                        <template for:each={mergeObj.values} for:item="valObj">
+                                            <template if:true={mergeObj.isEditable}> 
+                                            <th key={valObj}>
+                                                <lightning-input class="checkBoxClass" label = {valObj.val} onchange={radioHandle} value = {mergeObj.fieldApi} type="radio"  data-id={valObj.Id}  checked={valObj.isChecked}></lightning-input>
+                                            </th>
+                                        </template>
+                                        <template if:false={mergeObj.isEditable}> 
+                                            <th key={valObj}>
+                                                {valObj.val}
+                                            </th>
+                                        </template>
+                                            </template>
+                                    </tr>
+                            </tbody>
+                            </template>
+                        </table>
+                    </template>
+
+                  <!--Second Page End-->
+
+                    <!--Third Page Start-->
+                    <template if:true={thirdPage}>
+                     <div class="slds-p-around--x-large slds-align_absolute-center">
+                         <h1>Confirm Merge</h1>
+                     </div>
+                    </template>
+                </div>
+                <!--Third Page End-->
+
+                <!-- modal footer start-->
+                <footer class="slds-modal__footer">
+
+                     <template if:true={allRecordList}><button class="slds-button slds-button_neutral" onclick={firstNextHandle}>Next</button></template>
+                    <template if:true={secondPage}> 
+                        <button class="slds-button slds-button_neutral" onclick={secondNextHandle}>Next</button>
+                        <button class="slds-button slds-button_neutral" onclick={secondBackHandle}>Back</button>
+                    </template>
+                    <template if:true={thirdPage}> 
+                        <button class="slds-button slds-button_neutral" onclick={thirdBackHandle}>Back</button>
+                        <button class="slds-button slds-button_neutral" onclick={thirdMergeHandle}>Merge</button>
+                    </template>
+                </footer>
+                 <!-- modal footer End-->
+            </div>
+        </section>
+    </template>
+</template>

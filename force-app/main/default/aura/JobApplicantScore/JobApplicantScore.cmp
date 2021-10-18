@@ -1,0 +1,101 @@
+<aura:component controller="JobApplicantController" implements="flexipage:availableForAllPageTypes,force:hasRecordId" access="global" >
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:attribute name="headerData" type="List"/>
+    <aura:attribute name="childRecordsList" type="List"/>
+    <aura:if isTrue="{!v.childRecordsList.length > 0}">
+        
+        <!-- Colum Header Data -->
+    <table class="slds-table slds-table_bordered slds-table_cell-buffer">
+        <thead>                
+            <tr class="slds-text-title_caps">  
+                <aura:iteration items="{!v.headerData}" var="colObj">
+                    <th lass="slds-is-sortable slds-text-title--caps">
+                        <div class="slds-truncate slds-align_absolute-center">
+                            Job Name:  {!colObj.Name}
+                        </div>
+                    </th>
+                    <th lass="slds-is-sortable slds-text-title--caps">
+                         Experience<br/>
+                        <div class="slds-truncate slds-align_absolute-center">
+                            {!colObj.Exprience}
+                        </div>
+                    </th>
+                    <th lass="slds-is-sortable slds-text-title--caps">
+                          Qualification<br/>
+                        <div class="slds-truncate slds-align_absolute-center">
+                            {!colObj.Qualification}
+                        </div>
+                    </th>
+                    <th lass="slds-is-sortable slds-text-title--caps">
+                         Spoken Languange<br/>
+                        <div class="slds-truncate slds-align_absolute-center">
+                            {!colObj.Spoken}
+                        </div>
+                    </th>
+                    <th lass="slds-is-sortable slds-text-title--caps">
+                        Technical Languange<br/>
+                        <div class="slds-truncate slds-align_absolute-center blackbg">
+                            {!colObj.Technical}
+                        </div>
+                    </th>
+                    <th lass="slds-is-sortable slds-text-title--caps">
+                        <div class="slds-truncate slds-align_absolute-center">
+                            Score<br/>
+                        </div>
+                    </th>
+                </aura:iteration>
+            </tr>                
+        </thead> 
+        
+          <!-- Child Records Data -->
+        <tbody>
+            <aura:iteration items="{!v.childRecordsList}" var="chObj">
+                <tr>                         
+                    <td> 
+                        <div class="slds-truncate slds-align_absolute-center">                                                                  
+                            {!chObj.Name}                                        
+                        </div>
+                    </td> 
+                    <td>
+                        <aura:iteration items="{!chObj.experience}" var="expObj"> 
+                            <div class="block_container slds-align_absolute-center" style="{!'background-color:'+expObj.color+';width:50%;'}">
+                                {!expObj.value}   
+                            </div>
+                        </aura:iteration>
+                    </td>
+                    <td>
+                        <aura:iteration items="{!chObj.qualification}" var="qulObj"> 
+                            <div class="block_container slds-align_absolute-center" style="{!'background-color:'+qulObj.color+';width:50%;'}">
+                                {!qulObj.value}   
+                            </div>
+                        </aura:iteration>
+                    </td>
+                    <td>
+                        <aura:iteration items="{!chObj.spoken}" var="spoObj"> 
+                            <div class="block_container slds-align_absolute-center" style="{!'background-color:'+spoObj.color+';width:50%;'}">
+                                {!spoObj.value}   
+                            </div>
+                        </aura:iteration>
+                    </td>
+                    <td>
+                        <aura:iteration items="{!chObj.technical}" var="techObj"> 
+                            <div class="block_container slds-align_absolute-center" style="{!'background-color:'+techObj.color+';width:50%;'}">
+                                {!techObj.value}   
+                            </div>
+                        </aura:iteration>
+                    </td>
+                    <td>
+                        <div class="block_container slds-align_absolute-center" style="background-color:green;">
+                            {!chObj.score}%   
+                        </div>
+                    </td>
+                </tr>                                          
+            </aura:iteration>
+        </tbody>
+    </table>
+        <aura:set attribute="else">
+      No Child Records    <!-- When no child is here -->
+    </aura:set>
+    </aura:if>
+    
+</aura:component>

@@ -1,0 +1,12 @@
+<aura:component >
+    <aura:attribute name="flag" type="Boolean" default="false"/>
+    <aura:attribute name="childAttr" type="Boolean"/>
+    <aura:handler name="change" value="{!v.childAttr}" action="{!c.onChildAttrChange}"/><!-- call action when upload file -->
+    <div style="text-align:center;">   
+     <lightning:button  variant="brand" aura:id="prevPage" label="Click" onclick="{!c.handleClick}" />  
+    </div>
+    <aura:if isTrue="{!v.flag}">
+        <c:DynamicSObjectFieldPopup sObjApiName="Employee__c"  openModel = "{!v.flag}" childValue="{!v.childAttr}" />
+    </aura:if>
+   
+</aura:component>

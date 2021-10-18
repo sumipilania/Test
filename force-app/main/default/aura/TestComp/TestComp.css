@@ -1,0 +1,15 @@
+.THIS.parent{
+    background-color: red;
+}
+.THIS .child1{
+    background-color: black;
+}
+.THIS .child1 .childSub{
+    background-color: blue; 
+}
+.THIS.parent .child2{
+    background-color: green;
+}
+.THIS.parent2{
+    background-color: grey; 
+}

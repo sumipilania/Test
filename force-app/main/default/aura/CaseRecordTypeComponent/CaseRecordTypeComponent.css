@@ -1,0 +1,18 @@
+.THIS.exampleHolder{
+    position: relative;
+    display: inline-block;
+}
+.THIS .slds-modal__content {
+    overflow: hidden;
+    overflow-y: auto;
+    min-height: 160px !important;
+    padding-bottom: 20px;
+}
+.THIS .slds-p-around_medium,.THIS .slds-p-around--medium {
+    padding: 0px 20px 0px 20px !important;
+}
+.THIS.ms-footer{
+    position: relative;
+    display: inline-block;
+    top : 20 !important;
+}

@@ -1,0 +1,51 @@
+<aura:component controller="LazyLoadingController" >
+    <aura:attribute name="Spinner" type="boolean" default="false"/>	<!-- Spinner Show and Hide -->
+    <aura:handler name="init" value="{!this}" action="{!c.fetchAccList}"/>	<!-- Constructor Call at a time Component Loading Call Apex Controller -->
+    <aura:handler event="aura:waiting" action="{!c.showSpinner}"/>	
+    <aura:handler event="aura:doneWaiting" action="{!c.hideSpinner}"/>	<!-- After Complete Apex Controller Processing Done -->    	
+    <aura:attribute name="fieldList" type="List" default="['Name', 'Phone', 'Type']"/>
+    <aura:attribute name="objName" type="String" default="Account"/>	<!-- Selected Object API Name -->
+    <aura:attribute name="columnsList" type="List"/>	<!-- Selected Column List Store in List -->
+    <aura:attribute name="data" type="list" />	<!-- All Records Store -->
+    <aura:attribute name="offSet" type="String" default="0"/>
+    <aura:attribute name="totalRecords" type="Integer"/> <!-- Number of Records -->
+    
+    <!--Spinner Hanlder -->
+    <aura:if isTrue="{!v.Spinner}">
+        <div aura:id="spinnerId" class="slds-spinner_container">
+            <div class="slds-spinner--brand  slds-spinner slds-spinner--large slds-is-relative" role="alert">
+                <span class="slds-assistive-text">Loading</span>
+                <div class="slds-spinner__dot-a"></div>
+                <div class="slds-spinner__dot-b"></div>
+            </div>
+        </div>
+    </aura:if><br/><br/>
+    
+    Total Records  {!v.totalRecords}
+    
+    <!-- All Records Iteraare Using Custom Table with Scroll -->
+    <div class="scroll" onscroll="{!c.scroll}" aura:id="divHeight" >
+        <table class="slds-table slds-table_bordered slds-table_cell-buffer">
+            <thead>
+                <tr class="slds-text-title_caps">                   
+                    <aura:iteration items="{!v.columnsList}" var="colHeader">                        
+                        <th scope="col">
+                            <strong><div class="slds-truncate" title="Id">{!colHeader.label}</div></strong>
+                        </th>
+                    </aura:iteration>                    
+                </tr>
+            </thead>
+            <tbody>
+                <aura:iteration items="{!v.data}" var="obj"> 
+                    <tr>
+                        <aura:iteration items="{!obj.values}" var="val">                            
+                            <td> 
+                                {!val}
+                            </td>
+                        </aura:iteration>
+                    </tr>
+                </aura:iteration> 
+            </tbody>            
+        </table>
+    </div>    
+</aura:component>

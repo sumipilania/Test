@@ -1,0 +1,1 @@
+public class B{ public Void sayHello(){ string name= 'HI NAGARAJU';String Phone = '9948839625'; String Email = 'Nag@gmail.com';system.debug('***Name'+name);}   }

@@ -1,0 +1,29 @@
+<apex:page controller="TestWrapper">
+  <apex:form >
+  <apex:pageBlock id="thePB">
+  <apex:pageblocktable value="{!lst}" var="a">
+  <apex:column headerValue="Action">
+      <apex:commandlink value="Edit" rerender="thePB" rendered="{!NOT(a.isEdit)}" action="{!editmethid}">
+          <apex:param name="rowNumber" value="{!a.rowNo}" assignTo="{!rowIndex}"/>
+      </apex:commandlink>
+      <apex:commandlink value="Save" rerender="thePB" rendered="{!a.isEdit}" action="{!savemethid}">
+         <apex:param name="rowNumber" value="{!a.rowNo}" assignTo="{!rowIndex}"/>
+      </apex:commandlink>      
+  </apex:column>
+  <apex:column HeaderValue="Name">
+  <apex:outputField value="{!a.act.name}" rendered="{!NOT(a.isEdit)}"/>
+  <apex:inputField value="{!a.act.name}" rendered="{!a.isEdit}"/>
+  </apex:column>
+  <apex:column HeaderValue="Type">
+  <apex:outputField value="{!a.act.type}" rendered="{!NOT(a.isEdit)}"/>
+  <apex:inputField value="{!a.act.type}" rendered="{!a.isEdit}"/>
+  </apex:column>
+  <apex:column HeaderValue="Industry">
+  <apex:outputField value="{!a.act.industry}" rendered="{!NOT(a.isEdit)}" />
+  <apex:inputField value="{!a.act.industry}" rendered="{!a.isEdit}"/>
+  </apex:column>
+  </apex:pageblocktable>
+  </apex:pageBlock>
+  </apex:form>
+ 
+</apex:page>

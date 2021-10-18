@@ -1,0 +1,136 @@
+<apex:page standardController="Account" extensions="DragDropAccountController" >
+    <html>
+        <head>
+            <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script> 
+            <style>
+            #dragandrophandler   
+            {
+                border:2px dotted #0B85A1;
+                width:400px;
+                height:100px;
+                color:#92AAB0;
+                text-align:center;
+                padding:10px 10px 10 10px;
+                margin-bottom:10px;
+                font-size:200%;
+            }  
+            #myProgress {
+            width: 100%;
+            background-color: #ddd;
+            }
+            #myBar {
+            width: 1%;
+            height: 30px;
+            background-color: #4CAF50;
+            }
+            </style>
+            </head>
+            
+            <body>
+                <div id="dragandrophandler">Drag and Drop Files Here</div>
+                <br/><br/>
+                    <h1>Progress Bar<br/><br/>
+                        <div id="myProgress">
+                            <div id="myBar"></div>
+                        </div>
+                    </h1>
+            <script>
+            var fileSize=0;
+            var i=0;
+            
+            //This method handle asynchronous process
+            function handleFileUpload(files)
+            {
+                fileSize = files.length;  //Calculate Length of file
+                fileUpload(files);
+               
+               
+            }
+            
+            //This mothod for whole process to load and read file
+            function fileUpload(files)
+            {
+                if(i<fileSize)
+                {
+                    var attachmentBody = "";
+                    var accParentid ='{!$CurrentPage.parameters.id}';  //Runtime parent id
+                    var fileName = files[i].name; 
+                    var reader = new FileReader(); //Read File
+                    reader.onprogress = function(event) { 
+                        var elem = document.getElementById("myBar");   
+                        var width = 1;
+                        var id = setInterval(frame, 10);
+                        function frame() {
+                            if (width >= 100) {
+                                clearInterval(id);
+                            } else {
+                                width++; 
+                                elem.style.width = width + '%'; 
+                            }
+                        }
+                    };
+                    
+                    reader.onload = function(evt) {
+                        attachmentBody=window.btoa(evt.target.result)
+                        uploadFile(accParentid,attachmentBody,fileName);   //This function send all content requried for insert attachment         
+                    }
+                    reader.readAsBinaryString(files[i]); //Read file as binary bcoz we also insert image
+                    i++;
+                    fileUpload(files);     //Recursion process    
+                }          
+            }
+            
+            //this method call extension and insert attachment
+            function uploadFile(accParentid,attachmentBody,fileName)
+            {
+                DragDropAccountController.doUploadAttachment(
+                    accParentid, attachmentBody, fileName, 
+                    function(result, event) 
+                    {
+                    }); 
+            }
+            $(document).ready(function()
+                              {
+                                  var obj = $("#dragandrophandler");
+                                  obj.on('dragenter', function (e) 
+                                         {
+                                             e.stopPropagation();
+                                             e.preventDefault();
+                                             $(this).css('border', '2px solid #0B85A1');
+                                         });
+                                  obj.on('dragover', function (e) 
+                                         {
+                                             e.stopPropagation();
+                                             e.preventDefault();
+                                         });
+                                  obj.on('drop', function (e) 
+                                         {
+                                             
+                                             $(this).css('border', '2px dotted #0B85A1');
+                                             e.preventDefault();
+                                             var files = e.originalEvent.dataTransfer.files;                                             
+                                             handleFileUpload(files);
+                                         });
+                                  $(document).on('dragenter', function (e) 
+                                                 {
+                                                     e.stopPropagation();
+                                                     e.preventDefault();
+                                                 });
+                                  $(document).on('dragover', function (e) 
+                                                 {
+                                                     e.stopPropagation();
+                                                     e.preventDefault();
+                                                     obj.css('border', '2px dotted #0B85A1');
+                                                 });
+                                  $(document).on('drop', function (e) 
+                                                 {
+                                                     e.stopPropagation();
+                                                     e.preventDefault();
+                                                 });
+                                  
+                              });
+            
+            </script>
+        </body>
+    </html>
+</apex:page>

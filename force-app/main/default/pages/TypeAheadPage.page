@@ -1,0 +1,5 @@
+<apex:page standardStylesheets="false">
+          <c:TypeAheadComponent objName="Account" objField="Phone" uniqueId="A"/>
+          <c:TypeAheadComponent objName="Contact" objField="Name" uniqueId="c"/>
+          <c:TypeAheadComponent objName="Opportunity" objField="Name" uniqueId="o"/>
+</apex:page>

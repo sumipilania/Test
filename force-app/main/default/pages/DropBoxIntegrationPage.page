@@ -1,0 +1,75 @@
+<apex:page controller="DropBoxIntegrationController" action="{!dropAuth}">
+    <style type="text/css">
+        .ShowFiles {
+        font-size: 25px;
+        color: grey;
+        border-spacing: 5px;
+        margin: 5px;
+        text-decoration: none;
+        }
+        .Breadcrumb {
+        font-size: 15px;
+        color: red;
+        border-spacing: 5px;
+        margin: 5px;
+        text-decoration: none;
+        }
+    </style>
+    
+    <script>
+    function downloadFiles(tempLink)
+    {
+        var tagLink = document.createElement('a');
+        tagLink.href = tempLink; 
+        tagLink.click(); // using click() js function to download  files
+    }
+    </script>
+    
+    <apex:form id="formId">
+        <apex:pageBlock >
+            <apex:pageBlockSection title="Files and Folder" >
+                <apex:actionRegion >
+                    <apex:outputPanel > 
+                        <apex:repeat value="{!breadSequence}" var="bKey">
+                            <apex:commandLink value="{!breadSequence[bKey]}" action="{!breadCrumbMethod}" styleClass="Breadcrumb" style="color:blue;">
+                                >>
+                                <apex:param name="brKeyRev" value="{!bKey}" />
+                            </apex:commandLink>
+                        </apex:repeat>
+                    </apex:outputPanel>
+                    <br/>
+                    
+                    <apex:outputPanel >
+                        <apex:repeat value="{!fileFolderName}" var="fKey">
+                            <apex:image url="{!URLFOR($Resource.ImageFile, 'ImageIcon/folderIcon.jfif')}" width="50" height="30" />
+                            <apex:commandLink value="{!fileFolderName[fKey]}" action="{!filesInFolder}" styleClass="ShowFiles">
+                                <apex:param name="brKey" value="{!fKey}" />
+                                <apex:param name="brVal" value="{!fileFolderName[fKey]}" />
+                            </apex:commandLink>
+                            <br/>
+                        </apex:repeat>
+                    </apex:outputPanel>
+                    
+                    <br/>
+                    <apex:outputPanel >
+                        <apex:repeat value="{!fileNames}" var="fileKey">
+                            <apex:image url="{!URLFOR($Resource.ImageFile, 'ImageIcon/fileIcon.jfif')}" width="50" height="30" />
+                            <apex:commandLink value="{!fileNames[fileKey]}" action="{!downloadFile}" title="Download File" styleClass="ShowFiles" oncomplete="downloadFiles('{!tempLink}')" >
+                                <apex:param name="downloadId" value="{!fileNames[fileKey]}" />
+                            </apex:commandLink>
+                            
+                            <br/>
+                        </apex:repeat>
+                    </apex:outputPanel>
+                </apex:actionRegion>
+            </apex:pageBlockSection>
+            
+            <br/>
+            <apex:pageMessages id="showmsg"></apex:pageMessages>
+            <apex:pageBlockSection title="Upload Files">
+                <apex:inputFile value="{!uploadFileContent}" fileName="{!uploadFileName}" />
+                <apex:commandButton value="Upload File" action="{!uploadFiles}"></apex:commandButton>
+            </apex:pageBlockSection>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

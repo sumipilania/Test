@@ -1,0 +1,88 @@
+<template>
+
+    <template if:true={showHideSpinner}>
+        <div class="demo-only" style="height:10rem">
+            <div class="slds-spinner_container">
+                <div role="status" class="slds-spinner slds-spinner_medium slds-spinner_brand">
+                    <span class="slds-assistive-text">Loading</span>
+                    <div class="slds-spinner__dot-a"></div>
+                    <div class="slds-spinner__dot-b"></div>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <div style="overflow:auto;">
+        <table class="slds-table slds-table_cell-buffer slds-table_bordered">
+            <thead>
+                <tr class="slds-line-height_reset">
+                    <th>
+                        <lightning-input class="allCheckBoxClass" onchange={selectHeaderHandle} type="checkbox">
+                        </lightning-input>
+                    </th>
+                    <template if:true={headerList} for:each={headerList} for:item="col">
+                        <th key={col} colspan=3 scope="col">
+                            <template if:true={col.isSortable}>
+                                <template if:true={col.isAsendingOrNot}>
+                                    <img src={SortAscUrl} class="sortIcon" onclick={sortHandle} data-fieldname={col.fieldApiName} data-sortdir={col.sortDirection} data-reftype = {col.fieldType}> {col.fieldLabel}
+                                </template>
+                                <template if:false={col.isAsendingOrNot}>
+                                    <img src={SortDescUrl} class="sortIcon" onclick={sortHandle} data-fieldname={col.fieldApiName} data-sortdir={col.sortDirection} data-reftype = {col.fieldType}> {col.fieldLabel}
+                                </template>
+                            </template>
+                            <template if:false={col.isSortable}>
+                                {col.fieldLabel}
+                            </template>
+                            
+                        </th>
+                    </template>
+                </tr>
+            </thead>
+            <tbody>
+                <template if:true={allRecordList} for:each={allRecordList} for:item="recObj">
+                    <tr key={recObj.Id}>
+                        <th>
+                            <lightning-input class="checkBoxClass" onchange={selectHandle} value={recObj.Id}
+                                type="checkbox" data-id={recObj.Id} checked={recObj.isSelected}></lightning-input>
+                        </th>
+                        <template if:true={recObj.values} for:each={recObj.values} for:item="rec">
+                            <th key={rec} colspan=3 scope="col">
+                            <template if:false={rec.isSelectedAndEditable}>
+                                <template if:true={rec.isFieldEditable}>
+                                    <template if:true={rec.refFieldValueTemp}>
+                                        <input type="image" src={editIconUrl} class="pencilIcon" onclick={imgClick} value={rec.val} data-id={recObj.Id} data-fieldname={rec.fieldName} > <a onclick={redirectRecordIdUrl} data-id={rec.val}>{rec.refFieldValueTemp}</a>
+                                    </template>
+                                    <template if:false={rec.refFieldValueTemp}>
+                                        <input type="image" src={editIconUrl} class="pencilIcon" onclick={imgClick} value={rec.val} data-id={recObj.Id} data-fieldname={rec.fieldName} > {rec.val}
+                                    </template>
+                                </template>
+                                <template if:false={rec.isFieldEditable}>
+                                    <img src={lockIconUrl} class="pencilIcon"> {rec.val}
+                                </template>
+                            </template>
+                            <template if:true={rec.isSelectedAndEditable}>
+                                <template if:true={rec.fieldType}>
+                                    <lightning-record-edit-form object-api-name={objectName}>
+                                        <lightning-input-field variant="label-hidden" field-name={rec.fieldName}
+                                        onchange={onchangeText} onfocusout={onFocusOutHandler} value={rec.val} data-id={recObj.Id} data-fieldname={rec.fieldName}>
+                                        </lightning-input-field>
+                                    </lightning-record-edit-form>                                
+                                </template>
+                                <template if:false={rec.fieldType}>
+                                    <input type="text"  class={textBackgroundColor} onchange={onchangeText} onfocusout={onFocusOutHandler} value={rec.val} data-id={recObj.Id} data-fieldname={rec.fieldName} ></input>
+                                </template>
+                            </template>
+                            </th>
+                        </template>
+                    </tr>
+                </template>
+            </tbody>
+            <template if:true={showHideFooter}>
+                <div class="slds-docked-form-footer">
+                    <button type="button" class="slds-button slds-button_neutral" onclick={cancelHandler}>Cancel</button>
+                    <button type="button" class="slds-button slds-button_brand" onclick={saveHandler}>Save</button>
+                </div>
+            </template>
+        </table>
+    </div>
+</template>

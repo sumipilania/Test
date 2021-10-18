@@ -1,0 +1,26 @@
+.THIS {
+}
+.THIS .subData{    
+    margin: auto;
+    width: 60%;      
+}
+.THIS .imgClass{
+    width: 400px;
+    height: 150px;
+    display: block;    
+}
+.THIS.main{
+    background-color: lightgrey;
+    width: 50%;
+    border: 15px solid rgb(0, 57, 107);
+    padding: 40px;
+    margin: auto;
+    margin-top: 100px;
+}
+.THIS.monthClass{
+    width : 20%;
+    height: 20%;
+}
+.THIS .placeClass{
+    text-align: center !important;   
+}

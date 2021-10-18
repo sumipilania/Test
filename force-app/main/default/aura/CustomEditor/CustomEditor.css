@@ -1,0 +1,4 @@
+.THIS lightning-textarea > .slds-form-element__control > textarea{
+    height : 500px !important;
+    width : 700px;
+}

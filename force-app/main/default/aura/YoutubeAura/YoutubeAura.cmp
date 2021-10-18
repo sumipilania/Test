@@ -1,0 +1,3 @@
+<aura:component implements="force:appHostable,force:lightningQuickAction" >
+	<iframe width="720" height="480" src="https://www.youtube.com/embed/GjcNH8lszKM?controls=1"></iframe>
+</aura:component>

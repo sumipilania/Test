@@ -1,0 +1,17 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" >
+	<!--Attributes-->
+    <aura:attribute name="accFields" type="Account"/>
+     
+    <!--Component Start-->
+     
+    <!--Lightning Workspace API-->
+    <lightning:workspaceAPI aura:id="workspace"/>
+     
+    <!--Lightning Force Data to get Account record-->
+    <force:recordData aura:id="accRecordData"
+                      layoutType="FULL"
+                      recordId="{!v.recordId}"
+                      targetFields="{!v.accFields}"
+                      recordUpdated="{!c.handleRecordUpdate}"/>
+    <!--Component End-->
+</aura:component>

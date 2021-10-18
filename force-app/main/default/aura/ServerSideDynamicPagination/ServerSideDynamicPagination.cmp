@@ -1,0 +1,124 @@
+<!--Created By			: Sumit  Pilaniya
+ 	Description			: Server Side Pagination Every Click Request For Server Side 
+ 	Date				: 19/09/2019 
+-->
+
+<aura:component controller="ServerPaginationApexController">
+    <aura:attribute name="objNameList" type="List"/>	<!--Dynamic Object List With Label -->
+    <aura:attribute name="objApiName" type="String"/>	<!-- Selected Object API Name -->
+    <aura:attribute name="options" type="List"/>	<!-- Field List with labrl and API Name -->
+    <aura:attribute name="flag" type="Boolean" default="false"/>	<!-- Hide DualListBox Section which contains Fields on UI -->
+    <aura:attribute name="tableFlag" type="Boolean" default="false"/>	<!-- Hide Column and  Records Section -->
+    <aura:attribute name="selectedFieldApi" type="List" />	<!-- Selected Field Api List -->
+    <aura:attribute name="fieldApi" type="String"/>	<!-- Query String For Fetch Records -->
+    <aura:attribute name="totalRecSize" type="Integer" />	<!-- Total Records of Selected Object -->
+    <aura:attribute name="columnsList" type="List"/>	<!-- Selected Column List Store in List -->
+    
+    <aura:attribute name="offsetSize" type="Integer" default="0"/>	<!-- Offset Size for Query -->
+    <aura:attribute name="limitSize" type="Integer" default="5"/>	<!-- Limit Size for Query -->
+    <aura:attribute name="sortField" type="String" default="Name"/>	<!-- Bydefault Name Wise Sorting -->
+    <aura:attribute name="data" type="Object[]" />	<!-- All Records Store In  This List -->
+    <aura:attribute name="totalPageSize" type="Integer"/>	<!-- Total Page Based on limit and Object -->
+    <aura:attribute name="pageNumber" type="Integer" default="1"/>	<!--Dynmaically Change Current Page Size -->
+    
+    <aura:attribute name="Spinner" type="boolean" default="false"/>	<!-- Spinner Show and Hide -->
+    <aura:handler name="init" value="{!this}" action="{!c.fetchList}"/>	<!-- Constructor Call at a time Component Loading Call Apex Controller -->
+    <aura:handler event="aura:waiting" action="{!c.showSpinner}"/>	<!-- Show Spinner According When Complete Apex Controller Prcessiong done-->
+    <aura:handler event="aura:doneWaiting" action="{!c.hideSpinner}"/>	<!-- After Complete Apex Controller Processing Done -->
+    
+    <aura:attribute name="sortedBy" type="String" />	<!-- Selected Field Store in this Attribute -->
+    <aura:attribute name="sortedDirection" type="String" />	<!-- Asc and Desc Direction Set -->
+    
+    <!--Spinner Hanlder -->
+    <aura:if isTrue="{!v.Spinner}">
+        <div aura:id="spinnerId" class="slds-spinner_container">
+            <div class="slds-spinner--brand  slds-spinner slds-spinner--large slds-is-relative" role="alert">
+                <span class="slds-assistive-text">Loading</span>
+                <div class="slds-spinner__dot-a"></div>
+                <div class="slds-spinner__dot-b"></div>
+            </div>
+        </div>
+    </aura:if><br/><br/>
+    
+    <!-- Dynamically Show Object List -->
+    <div class="slds-align_absolute-center">
+        <ui:inputSelect aura:id="selectedObjName" label="Select Object " change="{!c.onSelectChange}">
+            <option value="" text="- None -" />
+            <aura:iteration items="{!v.objNameList}" var="obj" indexVar="key">
+                <option value="{!obj.key}" text="{!obj.value}" />
+            </aura:iteration>
+        </ui:inputSelect>
+        <br/>
+    </div><br/><br/>
+    
+    <!-- Show Fields Selected Object -->
+    <aura:if isTrue="{!v.flag}">
+        <div class="slds-align_absolute-center" style="width: 700px">
+            <lightning:dualListbox name="fields"                                  
+                                   sourceLabel="Available" 
+                                   selectedLabel="Selected"                                  
+                                   options="{!v.options}" 
+                                   value="{!v.selectedFieldApi}"
+                                   onchange="{!c.handleChange}"
+                                   />
+            <lightning:button variant="brand" label="Process"  onclick="{!c.showSelectedFields}" />                  
+        </div>
+    </aura:if>
+    
+    <!-- Show Fields and Records -->
+    <aura:if isTrue="{!v.tableFlag}">
+        <aura:if isTrue="{!v.data.length>0}"> 
+            <div class="slds-p-left_large">
+            Total Records = {!v.totalRecSize}
+            </div>
+            <div style="height: 50%">
+                <div class="slds-p-left_medium">
+                <lightning:datatable
+                                     aura:id="colId"
+                                     keyField="id"
+                                     data="{!v.data}"
+                                     columns="{!v.columnsList}"
+                                     hideCheckboxColumn="false"
+                                     sortedBy="{!v.sortedBy }"
+                                     sortedDirection="{!v.sortedDirection }"
+                                     onsort="{!c.updateColumnSorting}"        
+                                     />
+            </div>
+            </div>
+                <br/>
+            
+            <!-- Display Records Size -->
+            <div class="slds-float_left">
+                <div class="slds-p-left_medium">
+                    <ui:inputSelect aura:id="pageSize" label="Display Records Per Page: " change="{!c.onSelectPageSize}">
+                        <ui:inputSelectOption text="5" label="5" value="true"/>
+                        <ui:inputSelectOption text="10" label="10"/>
+                        <ui:inputSelectOption text="15" label="15"/>
+                        <ui:inputSelectOption text="20" label="20"/>
+                    </ui:inputSelect>
+                </div>
+            </div>
+            
+            <!-- Pagination Button -->
+            <div class="slds-align_absolute-center">      
+                <lightning:buttonIcon disabled="{!v.pageNumber == 1}" iconName="utility:left" variant="brand" onclick="{!c.handleFirst}" />
+                <lightning:button disabled="{!v.pageNumber == 1}" variant="brand" aura:id="prevPage" label="Prev" onclick="{!c.handlePrev}" />            
+                <lightning:button disabled="{!v.pageNumber == v.totalPageSize}" aura:id="nextPage" variant="brand" label="Next" onclick="{!c.handleNext}"/>                 
+                <lightning:buttonIcon disabled="{!v.pageNumber == v.totalPageSize}" iconName="utility:right" variant="brand" onclick="{!c.handleLast}" />
+            </div>
+            
+            <!--Total Page with Current Page Size-->
+            <div class="slds-float_right">
+                <div class="slds-p-right_medium">
+                    Page  {!v.pageNumber}/{!v.totalPageSize}
+                </div>
+            </div>
+            
+            <!-- If No Records Have in List -->
+            <aura:set attribute="else">
+                <br/><br/>
+                <h1 align="center"> No Reords Found</h1>
+            </aura:set>
+        </aura:if>
+    </aura:if>                                                       
+</aura:component>

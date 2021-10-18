@@ -1,0 +1,28 @@
+<apex:page standardcontroller="opportunity" extensions="TestPopup" standardStylesheets="true" sidebar="true" showHeader="true">
+<apex:form >
+    <apex:outputPanel id="testPanel">
+        <script>
+        function funcTest(varA){
+            if(varA){
+                alert('LEAD SOURCE IS CHANGED');
+            }
+            redirectToDetailPage();
+        }
+        </script>
+    </apex:outputPanel>
+    <apex:actionFunction name="doSave" rerender="testPanel" action="{!test}" oncomplete="funcTest('{!isChanged}'); "/>
+    <apex:actionFunction name="redirectToDetailPage" action="{!redirectMethod}"/>
+    <apex:outputPanel layout="block">
+        <apex:pageBlock >
+            <apex:pageBlockSection columns="2" title="Opportunity Information" collapsible="false">
+                <apex:inputField value="{!Opportunity.LeadSource  }" style="height: 20px"/>
+                <apex:inputField value="{!Opportunity.closeDate}" style="height: 20px"/>
+                <div  style="text-align:center;">   
+                    <apex:commandButton onclick="doSave();" 
+                                        oncomplete="funcTest()" value="Save"/>
+                </div>
+            </apex:pageBlockSection>
+        </apex:pageBlock>
+    </apex:outputPanel> 
+</apex:form>
+</apex:page>

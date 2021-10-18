@@ -1,0 +1,133 @@
+<apex:page controller="DynamicObjectPaginationStep2">
+    <apex:form id="formId" >
+        <apex:actionStatus onstart="startLoading();" onstop="stopLoading();" id="loadStatus" />
+        <style>
+            .overlay {
+            display: none;
+            height: 100%;
+            left: 0;
+            position: fixed;
+            top: 0;
+            opacity: 0.3;
+            -moz-opacity: 0.3;
+            width: 100%;
+            -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=30)";
+            filter: alpha(opacity=30);
+            background: #000;
+            -khtml-opacity: 0.3;
+            z-index: 1000;
+            }
+            
+            .loader {
+            background: url('/img/loading32.gif') scroll no-repeat 0 0;
+            width: 32px;
+            height: 32px;
+            position: absolute;
+            left: 50%;
+            }
+        </style>
+        
+        <div id="load_scrl" class="loadingBox loader" style="display:none"> </div>
+        <div class="loadingBox overlay"> </div>
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+        <script type="text/javascript">
+            
+        function func(){
+        	tempCall();
+            facetHeaderUnchecked();
+        }
+            
+            
+            function startLoading() {
+            $('#load_scrl').css('top', $(document).scrollTop() + 200);
+            $('.loadingBox').show();
+        }
+        
+        function stopLoading() {
+            $('.loadingBox').hide();
+        }
+        </script>
+        <style>
+            h1 {
+            text-transform:capitalize;
+            font-size: 1.3em;
+            }
+            .border {
+            border-bottom:3px solid grey;
+            }
+        </style>
+        <apex:PageBlock id="pgId" > 
+            <apex:outputPanel >
+                <h1 >
+                    Select Object
+                </h1>
+                
+                <!-- Select dynamic object  -->
+                <apex:selectList value="{!selectedobj}" size="1" > 
+                    <apex:selectOptions value="{!options}">   
+                    </apex:selectOptions>
+                    <apex:actionsupport event="onchange" action="{!selObjFields}"  status="loadStatus" />
+                </apex:selectList>
+                
+                <!-- Reset Page(Default Position)  -->
+                <apex:commandButton value="Reset" action="{!resetPage}">
+                </apex:commandButton><br/><br/><br/>
+            </apex:outputPanel>
+            
+            <!-- Border  -->
+            <div class="border" /><br/><br/>
+            
+            <!-- Select dynamic object  -->
+            <apex:outputPanel rendered="{!flag}" id="panelId" >
+                <table >
+                    <tr >
+                        <td>
+                            <h1 >
+                                {!selectedobj}: Fields
+                            </h1><br/>
+                            
+                            <!-- All fields Show on left side list  -->
+                            <apex:outputPanel rendered="{!deselectedValues.size != 0}">
+                                <apex:selectList multiselect="true" style="width:200px;height:200px;" value="{!leftSelected}" rendered="true">
+                                    <apex:selectOptions value="{!deselectedValues}"> 
+                                    </apex:selectOptions>
+                                </apex:selectList>
+                            </apex:outputPanel>
+                        </td>
+                        <td >
+                            
+                            <!-- Add and Remove Button  -->
+                            <apex:panelGroup ><br/><br/>
+                                <apex:commandButton value="Add" action="{!addList}" reRender="pgId" status="loadStatus" />  
+                                <br/><br/>
+                                <apex:commandButton value="Remove" action="{!removeList}" reRender="pgId" status="loadStatus" />    
+                            </apex:panelGroup><br/><br/><br/>
+                        </td><br/>
+                        <td>
+                            <h1 >
+                                Select Field
+                            </h1><br/>   
+                            
+                            <!-- Selected fields show on right side list  -->
+                            <apex:selectList value="{!rightSelected}" multiselect="true" style="width:200px;height:200px;" >
+                                <apex:selectOptions value="{!selectedValues}" />
+                            </apex:selectList>  
+                        </td>
+                        
+                        <!-- Connection between vf page and component  -->
+                        <td><br/>
+                            <apex:commandButton value="Process" style=" margin:160px 0px 0px 20px;" action="{!fetchList}"  status="loadStatus" reRender="na"
+                                                oncomplete="func();">
+                            </apex:commandButton>
+                        </td>
+                    </tr>     
+                </table>
+            </apex:outputPanel>  
+        </apex:PageBlock>
+    </apex:form>
+    
+    <!-- Component with attribute  -->
+    <apex:outputPanel style="display: {!IF(showComp,'block','none')}"  id="component">
+        <c:PaginationWrapperCompStep3 SelectObj="{!selectedobj}" Selectfields="{!fieldNameProcess}" sObjField="{!rightValuesList}"/> 
+    </apex:outputPanel>    
+</apex:page>

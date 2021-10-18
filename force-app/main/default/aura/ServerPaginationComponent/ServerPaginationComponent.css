@@ -1,0 +1,9 @@
+.THIS.slds-spinner_container {  
+    z-index: 10000;
+    position: fixed;   
+  }
+
+  .THIS.input-group .lightningInput {
+    display: inline-block;
+    margin-right: 10px;
+}

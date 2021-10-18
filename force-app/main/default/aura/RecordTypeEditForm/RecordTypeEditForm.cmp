@@ -1,0 +1,25 @@
+<aura:component controller="RecordTypeController" implements="flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId" access="global" >
+    
+    <aura:attribute name="recodId" type="Id" default="0122v000002AhdRAAS"/>
+    <aura:attribute name="sObjApiName" type="String" default="RecordType__c"/>
+    <aura:handler name="init" action="{!c.doInit}" value="{!this}"/>
+    <aura:attribute name="recList" type="List"/>
+    <div class="slds-align_absolute-center">
+        <lightning:select label="Select RecordType" onchange="{!c.onSelectChange}" >
+            <option value="" text="- None -" />
+            <aura:iteration items="{!v.recList}" var="obj">
+                <option  value="{!obj.Id}" label="{!obj.Name}" name="optionName" />
+            </aura:iteration>
+        </lightning:select>
+        
+        <br/>
+    </div>
+    
+    <div class="slds-m-around_xx-large">
+        <lightning:recordEditForm objectApiName="{!v.sObjApiName}" aura:id="accForm" recordTypeId="{!v.recodId}">
+            <lightning:messages />
+            <lightning:inputField fieldName="Controlling__c" aura:id="parent" onchange="{!c.onParent}" />
+            <lightning:inputField fieldName="DependentList__c" />
+        </lightning:recordEditForm>
+    </div>    
+</aura:component>

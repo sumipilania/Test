@@ -1,0 +1,165 @@
+<template>
+   <template if:true={showSpinner}>
+      <lightning-spinner alternative-text="Loading" variant="brand"></lightning-spinner>
+   </template>
+
+   <div class="slds-page-header slds-page-header_related-list main-body">
+
+      <!-- History name -->
+      <div class="slds-page-header__row box-body title-padding">
+         <div class="slds-page-header__col-title">
+            <div class="slds-media">
+               <div class="slds-media__body">
+                  <div class="slds-page-header__name">
+                     <div class="slds-page-header__name-title">
+                        <h2 class="mainheader">
+                           <button onclick={back} class="link-button Btnback slds-m-left_x-small"><i
+                                 class="arrow left"></i></button>
+                           <template if:true={scheduleRecord}>
+                              <span>{scheduleRecord.name} - History</span>
+                           </template>
+                        </h2>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+
+      <div class="slds-box slds-theme_default box-body boxbodycustom">
+         <!-- TABLE TO DISPLAY DATA -->
+         <table class="slds-table slds-table_cell-buffer slds-table_header-hidden slds-table_bordered fixed_header">
+            <!-- Headers -->
+            <thead>
+               <tr class="slds-line-height_reset">
+                  <template for:each={fields} for:item="field">
+                     <th key={field.value} class="tableHeader" scope="col">
+                        <div class="slds-truncate toggle slds-th__action display-block">
+                           <a onclick={sortHanlder} data-field={field.value} class="SortableHeader" name={field.value}>
+                              {field.label}
+                              <template if:true={field.isAsc}>
+                                 &nbsp; <img src={sortUp} height="8px" width="12px" class="icon-color"
+                                    data-field={field.value} />
+                              </template>
+                              <template if:false={field.isAsc}>
+                                 &nbsp; <img src={sortDown} height="8px" width="12px" class="icon-color"
+                                    data-field={field.value} />
+                              </template>
+                           </a>
+                        </div>
+                        <!--text-center-->
+                     </th>
+                  </template>
+               </tr>
+            </thead>
+
+            <!-- Schedule Data -->
+            <tbody>
+               <template if:true={recordsToDisplay}>
+                  <template for:each={recordsToDisplay} for:item="row">
+                     <template if:true={row}>
+                        <tr key={row.recordId}>
+                           <template for:each={row.cells} for:item="cell">
+                              <template if:true={cell.hasStatus}>
+                                 <template if:true={row.inProgress}>
+                                    <td key={cell.label} class="tabelData color-green">
+                                       <div class="slds-truncate capital-word slds-m-left_small">{cell.value}</div>
+                                    </td>
+                                 </template>
+                                 <template if:true={row.failed}>
+                                    <td key={cell.label} class="tabelData color-red">
+                                       <div class="slds-truncate capital-word slds-m-left_small">{cell.value}</div>
+                                    </td>
+                                 </template>
+                                 <template if:true={row.done}>
+                                    <td key={cell.label} class="tabelData">
+                                       <div class="slds-truncate capital-word slds-m-left_small">{cell.value}</div>
+                                    </td>
+                                 </template>
+                              </template>
+                              <template if:false={cell.hasStatus}>
+                                 <td key={cell.label} class="tabelData">
+                                    <div class="slds-truncate capital-word slds-m-left_small">{cell.value}</div>
+                                 </td>
+                              </template>
+                           </template>
+                        </tr>
+                     </template>
+                  </template>
+               </template>
+               <!-- for end -->
+            </tbody>
+         </table>
+
+         <div class="title-padding"></div>
+         <!-- FOOTER SECTION -->
+         <div>
+            <div class="slds-form-element box-body footerDiv slds-grid slds-gutters">
+               <div class="slds-col slds-size_4-of-12 display">
+                  <label class="slds-form-element__label display-inline customfooter">SHOWING
+                     {currentPageFirstRecordSeq}-{currentPageLastRecordSeq} OF {historyRecords.length} JOBS</label>
+                  &nbsp;&nbsp;&nbsp;&nbsp;
+                  <label class="slds-form-element__label display-inline showPanel">SHOW</label>
+                  <div class="slds-form-element__label display-inline">
+                     <lightning-combobox class="showComBox" value={pageSize} disabled={hasNoRecords}
+                        options={sizeOptions} onchange={handleSizeChange}></lightning-combobox>
+                  </div>
+               </div>
+               <div
+                  class="slds-form-element__label display-inline navigationButtonContainer slds-col slds-size_8-of-12">
+                  <div class="display-float">
+
+                     <!-- previous -->
+                     <template if:false={notHasPrevious}>
+                        <div class="button cursor-initial">
+                           <i onclick={handleChangePageSet} data-direction="previous"
+                              class="navigationBack cursor-point"></i>
+                        </div>
+                     </template>
+                     <template if:true={notHasPrevious}>
+                        <div class="button cursor-initial">
+                           <i class="navigationBack btnDisabled"></i>
+                        </div>
+                     </template>
+                     <template for:each={navigationButtons} for:item="btn">
+                        <template if:true={btn.isSelected}>
+                           <div class="button btnSelected" key={btn.pageNumber} onclick={navigate}
+                              data-pagenumber={btn.pageNumber}>
+                              {btn.pageNumber}
+                           </div>
+                        </template>
+                        <template if:false={btn.isSelected}>
+                           <template if:false={btn.disabled}>
+                              <div class="button" key={btn.pageNumber} onclick={navigate}
+                                 data-pagenumber={btn.pageNumber}>
+                                 {btn.pageNumber}
+                              </div>
+                           </template>
+                           <template if:true={btn.disabled}>
+                              <div class="button btnDisabled" key={btn.pageNumber}>
+                                 {btn.pageNumber}
+                              </div>
+                           </template>
+                        </template>
+                     </template>
+
+                     <!-- next -->
+                     <template if:false={notHasNext}>
+                        <div class="button cursor-initial">
+                           <i onclick={handleChangePageSet} data-direction="next"
+                              class="navigationNext cursor-point"></i>
+                        </div>
+                     </template>
+                     <template if:true={notHasNext}>
+                        <div class="button cursor-initial">
+                           <i class="navigationNext btnDisabled"></i>
+                        </div>
+                     </template>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+</template>
+</template>

@@ -1,0 +1,28 @@
+.slds-select{
+    width: 3%;
+    height: 10%;
+}
+.center {
+    margin: auto;
+    width: 60%;
+  }
+
+  /* Create three equal columns that floats next to each other */
+.column1 {
+    float: right;
+    margin-right: 50px !important;
+    margin-top: 8px;
+}
+
+  .column {
+    float: left;
+    width: 33.33%;
+    padding: 10px;
+  }
+  
+  /* Clear floats after the columns */
+  .row:after {
+    content: "";
+    display: table;
+    clear: both;
+  }

@@ -1,0 +1,66 @@
+<template>
+  
+    <lightning-card title="Pagination LWC" icon-name="custom:custom63">
+
+            Total Record : <h1>{totalRec}</h1>     
+               
+                <table class="slds-table slds-table_bordered slds-table_cell-buffer">
+                        <thead>                
+                            <tr class="slds-text-title_caps">  
+                                    <template if:true={fieldList}>
+                                            <template for:each={fieldList} for:item="fObj">                       
+                                    <th class="slds-is-sortable slds-text-title--caps"  key={fObj}>
+                                             <p key={fObj}>{fObj}</p>
+                                    </th>
+                                </template>
+                            </template>  
+                            </tr>    
+                        </thead>  
+                        <tbody>                
+                            <template for:each={accountsList} for:item="recObj">
+                                <tr key={recObj}>     
+                                        <template for:each={recObj.values} for:item="recVal">                
+                                        <td class="slds-is-sortable slds-text-title--caps" key={recObj}>       
+                                              {recVal}                      
+                                        </td> 
+                                    </template>
+                                </tr>  
+                            </template>                                        
+                           </tbody>
+                    </table><br/>
+                    <div class="row">
+                            <div class="column">
+                                    <div class="slds-select">                    
+                                            <select name = "optionSelect" onchange={pageSelectHandler} >
+                                    <option value="5">5</option>
+                                    <option value="10">10</option>
+                                    <option value="15">15</option>
+                                    <option value="20">20</option>
+                                </select>
+                            </div>
+                            </div>
+                            <div class="column">
+                                    <div class="slds-align_absolute-center">
+                                            <lightning-button variant="brand" label="First" title="Primary action" onclick={handleFirst} disabled={firstFlag} class="slds-m-left_x-small"></lightning-button>
+                                            <lightning-button variant="brand" label="Prev" title="Primary action" onclick={handlePrev} disabled={firstFlag} class="slds-m-left_x-small"></lightning-button>
+                                            <lightning-button variant="brand" label="Next" title="Primary action" onclick={handleNext} disabled={lastFlag} class="slds-m-left_x-small"></lightning-button>
+                                            <lightning-button variant="brand" label="Last" title="Primary action" onclick={handleLast} disabled={lastFlag} class="slds-m-left_x-small"></lightning-button>
+                                        </div>
+                            </div>
+                            <div class="column1">
+                                 Page  {pageSize}/{recPageSize}
+                            </div>
+                          </div>
+                          <template if:true={spinner}>
+                                <div class="demo-only" style="height:6rem">
+                                        <div class="slds-spinner_container">
+                                          <div role="status" class="slds-spinner slds-spinner_medium slds-spinner_brand">
+                                            <span class="slds-assistive-text">Loading</span>
+                                            <div class="slds-spinner__dot-a"></div>
+                                            <div class="slds-spinner__dot-b"></div>
+                                          </div>
+                                        </div>
+                                      </div>
+                    </template>
+    </lightning-card>
+</template>

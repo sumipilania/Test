@@ -1,0 +1,16 @@
+<apex:page lightningStylesheets="true">
+    <script>
+        function showToast() {
+            sforce.one.showToast({
+                "title": "Success!",
+                "message": "Welcome to salesforce code crack.",
+                "type": "success"
+            });
+        }
+    </script>
+    <apex:form >
+        <apex:page >
+            <apex:commandButton value="Show Toast" onclick="showToast();" />
+        </apex:page>
+    </apex:form>
+</apex:page>

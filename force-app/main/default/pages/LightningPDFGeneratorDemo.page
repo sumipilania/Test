@@ -1,0 +1,44 @@
+<apex:page extensions="DataDisplayController" standardController="Candidate__c" showHeader="false">
+
+    <apex:includeLightning />
+    
+	<!-- Page code -->
+    <apex:form >
+		<apex:inputhidden id="hidData" value="{!PDFData}"/>
+    
+    	<apex:actionfunction name="jsGeneratePDF" action="{!downloadPDF}" />
+        
+        <div id="lightning" />
+        
+    <script>
+    	function saveData(data, callback){
+            var hidData = document.getElementById('{!$Component.hidData}');
+            hidData.value = JSON.stringify(data);
+            
+            //invoke PDF Generation
+            jsGeneratePDF();
+         
+            //invoke callback;
+            if(typeof callback == 'function') callback();
+        }
+        
+    	
+    	function loadComponents(){
+            console.log("Loading lightning component: DataProcessor");
+            
+            $Lightning.use("c:SampleApp", function() {
+                $Lightning.createComponent("c:DataProcessor",
+                { 
+                    sendData : saveData
+                },
+                "lightning",
+                function(cmp) {
+                    // do some stuff
+                });
+            });
+        }
+		
+		loadComponents();
+    </script>
+    </apex:form>
+</apex:page>

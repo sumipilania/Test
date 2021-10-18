@@ -1,0 +1,3 @@
+<apex:page controller="WhatsAppMessageService" action="{!fetchRespFromWhatsapp}">
+   testing
+</apex:page>

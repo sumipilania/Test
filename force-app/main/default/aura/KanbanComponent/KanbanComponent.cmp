@@ -1,0 +1,48 @@
+<aura:component controller="kanbanController" implements="force:appHostable">
+    <aura:attribute name="objName" type="String"/>
+    <aura:attribute name="objFields" type="String[]"/>
+    <aura:attribute name="kanbanPicklistField" type="String"/>
+    <aura:handler name="init" action="{!c.doInit}" value="{!this}"/>
+    <aura:attribute name="kanbanData" type="List"/>
+    
+    <div class="slds-page-header">
+        <div class="slds-media">
+            <div class="slds-media__figure">
+                <span class="slds-icon_container" title="Description of icon when needed">
+                    <lightning:icon iconName="utility:kanban" variant="bare" size="small"/>
+                </span>
+            </div>
+            <div class="slds-media__body">
+                <h1 class="slds-page-header__title slds-truncate slds-align-middle" title="Kanban - Drag &amp; Drop">Kanban - Drag &amp; Drop : {!v.objName}</h1>
+            </div>
+        </div>
+    </div>
+    <div style="padding:0.5rem;">
+        <aura:iteration var="pickVal" items="{!v.kanbanData}" >
+            <div class="stageContainer">
+                <div class="slds-grid slds-grid_vertical">
+                    <div>
+                        <div class="slds-media slds-no-space slds-has-divider_bottom-space slds-media_center">
+                            <div class="slds-media__body">
+                                <h1 class="slds-page-header__title slds-align-middle slds-truncate" title="{!pickVal.key}">{!pickVal.key}({!pickVal.value.length})</h1>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <ul ondrop="{!c.drop}" ondragover="{!c.allowDrop}" class="slds-has-dividers_around-space dropZone" data-Pick-Val="{!pickVal.key}" >
+                    <aura:iteration var="pickValKey" items="{!pickVal.value}">    
+                        <li class="slds-item slds-m-around_small" draggable="true" ondragstart="{!c.drag}" id="{!pickValKey.Id}">
+                            <article class="slds-tile slds-tile_board">
+                                <h3 class="slds-truncate" title="{!pickValKey.Name}">
+                                    <a  onclick="{!c.doView}">
+                                        <span class="slds-truncate" id="{!pickValKey.Id}">{!pickValKey.Name}</span>
+                                    </a>
+                                </h3>
+                            </article>
+                        </li>
+                    </aura:iteration>
+                </ul>
+            </div>
+        </aura:iteration>
+    </div>      
+</aura:component>

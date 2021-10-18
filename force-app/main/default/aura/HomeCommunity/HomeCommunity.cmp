@@ -1,0 +1,14 @@
+<aura:component controller="HomeCommunityController" implements="forceCommunity:availableForAllPageTypes" access="global">
+    <aura:handler name="init" value="{!this}" action="{!c.getInfo}"/>	<!-- Constructor Call at a time Component Loading Call Apex Controller -->
+    <aura:attribute name="userObj" type="Object"/>
+     <aura:attribute name="imgUrl" type="String"/>
+  
+    <div class="imgcontainer">
+        <img src="{!v.userObj.FullPhotoUrl}"/>
+    </div><br/>
+    <div class="txt">      
+        <h1>Contact Name = {!v.userObj.Name}</h1>
+        <h1>Contact Id = {!v.userObj.Id}</h1>
+        <h1>User Name =  {!v.userObj.Email}</h1> 
+    </div>
+</aura:component>

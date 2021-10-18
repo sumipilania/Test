@@ -1,0 +1,33 @@
+<template>
+    <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+        <div class="slds-modal__container">
+           <!-- modal header start -->
+           <header class="slds-modal__header">
+              
+              <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">New Organization Developer</h2>
+           </header>
+           <!-- modal body start -->
+           <div class="slds-modal__content slds-p-around_xx-large" id="modal-content-id-1">
+            <lightning-input id="customUrl" type="text" label="Developer Name" value={orgObj.Name} onchange={handleName} required></lightning-input>
+            <lightning-combobox
+            label="Org Type"
+            value={orgObj.Org_Type__c}
+            placeholder="Select Org"
+            options={options}
+            onchange={handlOrgType}
+            required
+    ></lightning-combobox>
+    <template if:true={domainShowHide}>
+    <lightning-input type="text" value={orgObj.Custom_Url__c} label="Custom Domain" onchange={handleUrl} required></lightning-input>
+    </template>
+           </div>
+           <!-- modal footer start-->
+           <footer class="slds-modal__footer">
+              <button class="slds-button slds-button_neutral" onclick={closeModal}>Cancel</button>
+              <lightning-button variant="brand" label="Authorize" title="Primary action" onclick={handleAuthorize} class="slds-m-left_x-small"></lightning-button>
+
+           </footer>
+        </div>
+     </section>
+     <div class="slds-backdrop slds-backdrop_open"></div>
+</template>

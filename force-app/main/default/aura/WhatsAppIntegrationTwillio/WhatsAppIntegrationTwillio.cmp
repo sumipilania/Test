@@ -1,0 +1,61 @@
+<aura:component controller="WhatsAppMessageService" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes" access="global" >
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:attribute name="compFlag" type="Boolean"/>
+    <aura:attribute name="recList" type="List" />
+    <aura:attribute name="body" type="String" />   
+    <aura:if isTrue="{!v.compFlag}">
+        <div class="maindiv"> 
+            <div class="scrollclass">
+                <aura:iteration items="{!v.recList}" var="rec" > 
+                    <!-- Inbound whatsapp to twilio -->
+                    <aura:if isTrue="{!rec.Status=='Inbound'}">
+                        <section role="log" class="slds-chat">
+                            <ul class="slds-chat-list">
+                                <li class="slds-chat-listitem slds-chat-listitem_inbound">
+                                    <div class="slds-chat-message">
+                                        <div class="slds-chat-message__body">
+                                            <div class="slds-chat-message__text slds-chat-message__text_inbound">
+                                                <span>{!rec.Body}</span>
+                                            </div>
+                                            
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </section>
+                        
+                        <!-- End -->
+                        
+                        <!-- outbound twilio to whatsapp -->
+                        <aura:set attribute="else">                        
+                            <section role="log" class="slds-chat">
+                                <ul class="slds-chat-list">
+                                    <li class="slds-chat-listitem slds-chat-listitem_outbound">
+                                        <div class="slds-chat-message">
+                                            <div class="slds-chat-message__body">
+                                                <div class="slds-chat-message__text slds-chat-message__text_outbound">
+                                                    <span>{!rec.Body}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </section>
+                        </aura:set>
+                        
+                    </aura:if>
+                </aura:iteration>  
+            </div>
+            <!-- End -->
+            <div class="slds-align_absolute-center fixpositionclass">
+                <lightning:input aura:id="bodyBox" onchange="{!c.bodyMsg}" class="msgBox"/>
+                <p class="enterIcon" onclick="{!c.handleClick}"><lightning:icon iconName="utility:right" size="small"/></p>
+            </div>             
+        </div>
+        <aura:set attribute="else">
+            <br/><br/>
+            <h1 align="center"> No Chat Avaliable</h1>
+            <lightning:button variant="brand" label="Start Chat" onclick="{!c.startChat}"/>
+        </aura:set>
+    </aura:if>
+</aura:component>

@@ -1,0 +1,81 @@
+<apex:page controller="MyControllerAccount" tabStyle="Account">
+    <style type="text/css">						<!--
+        .oddrow{background-color: #00FFFF; } 			For designing
+        .evenrow{background-color: #7FFFD4; } 
+        .textalign{text-align:center; } 					-->
+    </style>
+    
+    <apex:form >
+        <apex:actionFunction name="refreshPageSize" action="{!refreshPageSize}"  reRender="pgblock"/>
+        <apex:pageBlock id="pgblock">
+            <apex:pageBlockSection title="All Custom Accounts" collapsible="false" columns="1" >
+                <apex:outputPanel layout="block" style="overflow:auto;height:700px;width:1600px;">
+                    <apex:pageBlockTable value="{!Accounts}" var="acc" styleClass="textalign" headerClass="textalign" >
+                        <apex:column >
+                            <apex:facet name="header">
+                                <apex:commandLink value="Account Name" action="{!toggleSort}" rerender="pgblock" style="display:block;">
+                                    <!-- Value attribute should have field (API Name) to sort in asc or desc order -->
+                                    <apex:param name="sortField" value="Name" assignTo="{!sortField}"/>
+                                </apex:commandLink>
+                            </apex:facet>
+                            
+                            <apex:outputField value="{!acc.name}"/>
+                        </apex:column> 
+                        
+                        <apex:column >
+                            <apex:facet name="header">
+                                <apex:commandLink value="Phone" action="{!toggleSort}" rerender="pgblock" style="display:block;">
+                                    <apex:param name="sortField" value="Phone" assignTo="{!sortField}"/>
+                                </apex:commandLink>
+                            </apex:facet>
+                            <apex:outputField value="{!acc.Phone}"/>
+                        </apex:column>
+                        
+                        <apex:column >
+                            <apex:facet name="header">
+                                <apex:commandLink value="Industry" action="{!toggleSort}" rerender="pgblock" style="display:block;">
+                                    <apex:param name="sortField" value="Industry" assignTo="{!sortField}"/>
+                                </apex:commandLink>
+                            </apex:facet>
+                            <apex:outputField value="{!acc.Industry}"/>
+                        </apex:column>
+                        
+                        <apex:column >
+                            <apex:facet name="header">
+                                <apex:commandLink value="BillingState" action="{!toggleSort}" rerender="pgblock" style="display:block;">
+                                    <apex:param name="sortField" value="BillingState" assignTo="{!sortField}"/>
+                                </apex:commandLink>
+                            </apex:facet>
+                            <apex:outputField value="{!acc.BillingState}"/>
+                        </apex:column>
+                        
+                    </apex:pageBlockTable>
+                </apex:outputPanel>
+                <apex:outputPanel layout="block"  id="p1" style="text-align:center;">
+                    <!--  Show Record Change  -->
+                    <div style="position:fixed;">
+                        <apex:outputText >{!(con.pageNumber * size)+1-size}-{!IF((con.pageNumber * size)>noOfRecords,noOfRecords,
+                            (con.pageNumber * size))} of {!noOfRecords}
+                        </apex:outputText>
+                        
+                    </div>
+                <!-- Pagination Using StandardSetControoler Method   -->
+       				<apex:commandButton reRender="pgblock" value="First" action="{!con.first}" disabled="{!!con.hasPrevious}" title="First Page" /> 
+                    <apex:commandButton reRender="pgblock" value="Previous" action="{!con.previous}" disabled="{!!con.hasPrevious}" title="Previous Page"/> 
+                    <apex:commandButton reRender="pgblock" value="Next" action="{!con.next}" disabled="{!!con.hasNext}" title="Next Page"/> 
+                    <apex:commandButton reRender="pgblock" value="Last" action="{!con.last}" disabled="{!!con.hasNext}" title="Last Page"/> 
+                    
+           			&nbsp;&nbsp;
+                    <!-- Select Records Size From List to Show Records At a Time -->
+               		<apex:selectList value="{!size}" multiselect="false" size="1" onchange="refreshPageSize();" style="float:right;" title="No of Records">
+                        <apex:selectOptions value="{!paginationSizeOptions}"/>
+                    </apex:selectList>
+                    <!-- Go to Page From All Page -->
+                    Page: <apex:inputText style="width:20px;" value="{!con.pageNumber}" rendered="true"></apex:inputText>of {!CEILING(noOfRecords/size)}
+                    
+                </apex:outputPanel>
+                
+            </apex:pageBlockSection>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

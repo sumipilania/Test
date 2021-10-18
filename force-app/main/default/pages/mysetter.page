@@ -1,0 +1,14 @@
+<apex:page standardController="Opportunity" tabStyle="Opportunity">
+    <apex:form >
+    <apex:pageBlock >
+        
+        <apex:pageBlockSection title="Opportunity Information" >
+            <apex:outputField value="{!opportunity.name}"/>
+            <apex:outputField value="{!opportunity.amount}"/>
+            <apex:outputField value="{!opportunity.closeDate}"/>
+        	
+            <apex:inputText maxlength="1" style="width:20px;" />
+        </apex:pageBlockSection>
+    </apex:pageBlock>
+        </apex:form>
+</apex:page>

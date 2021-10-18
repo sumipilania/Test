@@ -1,0 +1,279 @@
+<template>
+
+  <div class="custom-body">
+    <!-- SPINNER -->
+    <template if:false={spinner}>
+      <lightning-spinner alternative-text="Loading"></lightning-spinner>
+    </template>
+
+    <!-- LANDING COMPONENT -->
+    <template if:true={showHideComp.landingComp}>
+      <div class="main-body">
+        <div class="slds-page-header slds-page-header_related-list">
+            <div class="slds-page-header__row">
+                <div class="slds-page-header__col-title">
+                    <div class="slds-media">
+                        <div class="slds-media__body">
+                            <div class="slds-page-header__name">
+                                <div class="slds-page-header__name-title">
+                                    <h1>
+                                        <span class="slds-page-header__title slds-truncate"
+                                            title="Contacts (will truncate)">Punchh Sync</span>
+                                    </h1>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-page-header__col-actions">
+                    <div class="slds-page-header__controls">
+                        <div class="slds-page-header__control">
+                            <lightning-icon icon-name="utility:settings" class="cursor-pointer" variant="success" size="small"
+                            onclick={settingHandler}></lightning-icon>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="slds-box slds-theme_default">
+            <div class="slds-page-header slds-page-header_related-list">
+                <div class="slds-page-header__row">
+                    <div class="slds-page-header__col-title">
+                        <div class="slds-media">
+                            <div class="slds-media__body">
+                                <div class="slds-page-header__name">
+                                    <div class="slds-page-header__name-title">
+                                        <h2>
+                                            <span class="slds-page-header__title slds-truncate"
+                                                title="Contacts (will truncate)">Schedule</span>
+                                        </h2>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="slds-page-header__col-actions">
+                        <div class="slds-page-header__controls">
+                            <div class="slds-page-header__control">
+                                <button onclick={newMappingHandler} class="link-button">
+                                    <lightning-icon icon-name="utility:add" variant="success" size="xx-small"
+                                      class="padding-bottom"></lightning-icon> &nbsp;New Job
+                                  </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <template if:true={showHideComp.showEmptyState}>
+              <div class="text-center">
+                  <div>
+                      <img src={emptyImg} height="auto" width="160">
+                  </div><br/>
+                  <div class="no-jobs"><b>No jobs have been scheduled</b></div>
+                  <div>To schedule your first job, click on “+ New Job” above.</div>
+              </div>
+            </template>
+
+            <template if:true={showHideComp.errorPage}>
+              <div class="text-center error-page">
+                  <div>
+                    <img src={errorImg} height="auto" width="160">
+                  </div><br/>
+                  <div class="no-jobs"><b>Something went wrong</b></div>
+                  <div>Please refresh the page or try again later.</div>
+              </div>
+            </template>
+
+            <template if:false={showHideComp.showEmptyState}>
+              <template if:false={showHideComp.errorPage}>
+                <table class="slds-table slds-table_cell-buffer slds-table_header-hidden slds-table_bordered fixed_header">
+                    <!-- Headers -->
+                    <!-- TABLE TO DISPLAY DATA -->
+                    <thead>
+                      <tr class="slds-line-height_reset">
+                        <template for:each={fields} for:item="field">
+                          <th key={field.value} class="" scope="col">
+                            <div class="slds-truncate toggle slds-th__action display-block">
+                              <a onclick={sortHanlder} data-field={field.value} class="SortableHeader" name={field.value}>
+                                {field.label}
+                                <!-- <template if:true={field.isSorted}> -->
+                                <template if:true={field.isAsc}>
+                                  <!-- &nbsp; &#x21E7; -->
+                                  &nbsp; <img src={sortUp} height="8px" width="12px" class="icon-color" data-field={field.value}
+                                    />
+                                </template>
+                                <template if:false={field.isAsc}>
+                                  <!-- &nbsp; &#x21E9; -->
+                                  &nbsp; <img src={sortDown} height="8px" width="12px" class="icon-color" data-field={field.value}
+                                    />
+                                </template>
+                                <!-- </template> -->
+                              </a>
+                            </div>
+                            <!--text-center-->
+                          </th>
+                        </template>
+                        <!-- Actions Header -->
+                        <th scope="col" class="text-centre">
+                          <div title="Actions">ACTIONS</div>
+                        </th>
+                      </tr>
+                    </thead>
+          
+                    <!-- Schedule Data -->
+                    <tbody>
+                      <template if:true={recordsToDisplay}>
+                        <template for:each={recordsToDisplay} for:item="row">
+                          <template if:true={row}>
+                            <tr key={row.recordId}>
+                              <template for:each={row.cells} for:item="cell">
+                                <template if:true={cell.isClickable}>
+                                  <td key={cell.value} data-label={cell.label}>
+                                    <div class="slds-truncate capital-word slds-m-left_small">
+                                      <button key={cell.value} data-id={row.recordId} onclick={openHistory} class="link-button slds-m-left_x-small">{cell.value}</button>
+                                    </div>
+                                  </td>
+                                </template>
+                                <template if:false={cell.isClickable}>
+                                  <td key={cell.value} data-label={cell.label}>
+                                    <div class="slds-truncate capital-word slds-m-left_small">{cell.value}</div>
+                                  </td>
+                                </template>
+                              </template>
+                              <td data-label="Action">
+                                <div class="slds-p-around__xxx-small lgc-bg text-centre">
+                                  <lightning-button-menu  class="menu-item" data-id={row.recordId} data-name={row.name} icon-name="utility:threedots_vertical"
+                                    alternative-text="Show menu" variant="bare" onselect={handleActions}>
+                                    <lightning-menu-item icon-name="utility:preview" value="view" label="View"></lightning-menu-item>
+                                    <lightning-menu-item icon-name="utility:edit" value="edit" label="Edit"></lightning-menu-item>
+                                    <lightning-menu-item icon-name="utility:delete" class="delete-icon" value="delete" label="Delete"></lightning-menu-item>
+                                  </lightning-button-menu>
+                                </div>
+                              </td>
+                            </tr>
+                          </template>
+                        </template>
+                      </template>
+                      <!-- for end -->
+                    </tbody>
+                  </table>
+                  <div class="title-padding"></div>
+          
+                <!-- FOOTER SECTION -->
+                <div>
+                    <div class="slds-form-element box-body footerDiv slds-grid slds-gutters">
+                        <div class="slds-col slds-size_4-of-12 display-flex">
+                        <label class="slds-form-element__label display-inline customfooter">SHOWING {currentPageFirstRecordSeq}-{currentPageLastRecordSeq} OF {recordList.length} JOBS</label>
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <label class="slds-form-element__label display-inline showPanel">SHOW</label>
+                        <div class="slds-form-element__label display-inline">
+                            <lightning-combobox class="showComBox" value={pageSize} disabled={hasNoRecords} options={sizeOptions} onchange={handleSizeChange}></lightning-combobox>
+                        </div>
+                        </div>
+            
+                        <div class="slds-form-element__label display-inline navigationButtonContainer slds-col slds-size_8-of-12">
+                        <div class="display-flex-float" >
+                            
+                            <!-- previous -->
+                            <template if:false={notHasPrevious}>
+                                <div class="button cursor-initial">
+                                    <i onclick={handleChangePageSet}  data-direction="previous" class="navigationBack cursor-pointer"></i>
+                                </div>
+                            </template>
+                            <template if:true={notHasPrevious}>
+                                <div class="button cursor-initial">
+                                    <i class="navigationBack btnDisabled"></i>
+                                </div>
+                            </template>
+            
+                            <template for:each={navigationButtons} for:item="btn">
+                                <template if:true={btn.isSelected}>
+                                    <div class="button btnSelected" key={btn.pageNumber} onclick={navigate} data-pagenumber={btn.pageNumber}>
+                                    {btn.pageNumber}
+                                    </div>
+                                </template>
+                                <template if:false={btn.isSelected}>
+                                    <template if:false={btn.disabled}>
+                                    <div class="button" key={btn.pageNumber} onclick={navigate} data-pagenumber={btn.pageNumber}>
+                                        {btn.pageNumber}
+                                    </div>
+                                    </template>
+                                    <template if:true={btn.disabled}>
+                                    <div class="button btnDisabled" key={btn.pageNumber}>
+                                        {btn.pageNumber}
+                                    </div>
+                                    </template>
+                                </template>
+                            </template>
+            
+                            <!-- next -->
+                            <template if:false={notHasNext}>
+                                <div class="button cursor-initial">
+                                    <i onclick={handleChangePageSet} data-direction="next" class="navigationNext cursor-pointer"></i>
+                                </div>
+                            </template>
+                            <template if:true={notHasNext}>
+                                <div class="button cursor-initial">
+                                    <i class="navigationNext btnDisabled"></i>
+                                </div>
+                            </template>
+                        </div>
+                        </div>
+                    </div>
+                </div>
+              </template>
+            </template>
+        </div>
+      </div>
+    </template>
+
+    <!-- Delete Popup -->
+    <template if:true={showDeletePopup}>
+      <section role="dialog" class="slds-modal slds-fade-in-open">
+        <div class="slds-modal__container">
+          <header class="slds-modal__header">
+            <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close"
+              onclick={closeModal}>
+              <lightning-icon icon-name="utility:close" alternative-text="close" variant="inverse" size="small"
+                onclick={closeDeleteModal}></lightning-icon>
+              <span class="slds-assistive-text">Close</span>
+            </button>
+            <h2 class="slds-text-heading_medium slds-hyphenate">Delete Schedule Job</h2>
+          </header>
+          <!-- Modal/Popup Box LWC body starts here -->
+          <div class="slds-modal__content slds-var-p-around_medium" id="modal-content-id-1">
+            <p class="slds-align_absolute-center font-size"><b>Do you really want to delete the schedule job</b></p>
+          </div>
+          <!-- Modal/Popup Box LWC footer starts here -->
+          <footer class="slds-modal__footer">
+            <!-- <button class="slds-button slds-button_neutral" onclick={deleteSchedule} title="Yes">Yes</button>
+            <button class="slds-button slds-button_brand" onclick={closeDeleteModal} title="No">No</button> -->
+            <button class="slds-button slds-button_brand navigationButtons btn-color" onclick={deleteSchedule}
+            >Yes</button>
+          <button class="slds-button slds-button_brand navigationButtons btn-color" onclick={closeDeleteModal}
+          >No</button>
+          </footer>
+        </div>
+      </section>
+      <div class="slds-backdrop slds-backdrop_open"></div>
+    </template>
+
+    <!-- CONFIG COMPONENT -->
+    <template if:true={showHideComp.configurationComp}>
+      <c-configuration-comp onresponse={showHideHandler} onupdateconfig={updateConfig} config={config}>
+      </c-configuration-comp>
+    </template>
+
+    <!-- SCHEDULE COMPONENT -->
+    <template if:true={showHideComp.scheduleComp}>
+      <c-schedule-modal onresponse={showHideHandler} field-mapping-metadata-from-p={fieldMappingMetadataP} external-config={config} schedule-details={scheduleDetails}></c-schedule-modal>
+    </template>
+
+    <!-- HISTORY COMPONENT -->
+    <template if:true={showHideComp.scheduleHistory}>
+      <c-schedule-history onresponse={showHideHandler} schedule-record={selectedRecord} config-data={config}></c-schedule-history>
+    </template>
+  </div>
+
+</template>

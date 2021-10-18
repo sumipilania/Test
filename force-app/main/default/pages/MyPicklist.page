@@ -1,0 +1,88 @@
+<apex:page controller="MyPicklistController">
+    <style type="text/css">
+        h1 {
+        font-size:20px;
+        font-weight: normal;
+        margin-top:25px; 
+        text-transform: capitalize;
+        }
+        .panel {
+        border-bottom:3px solid grey;
+        margin-top:30px;
+        width:1600px;        
+        
+        }
+        .selectList {
+        height:300px;
+        width:250px;
+        }
+        .buttonclass {
+        text-align:center;
+        margin:100px 10px 0px 10px;
+        }
+        .mainclass {
+        width:1610px;
+        height:450px;
+        }
+    </style>
+    <apex:form id="refreshAllField">
+        <apex:pageblock >
+            <apex:outputPanel layout="block" styleClass="mainclass" >
+                <!-- getting the list of sObjects -->
+                <h1>Select Objects : </h1>
+                <apex:selectList value="{!selectedObject}" size="1">
+                    <apex:selectOptions value="{!ObjectNames}"/>
+                    <apex:actionSupport event="onchange" action="{!fetchSobjectFields}" rerender="refreshAllField"/>
+                </apex:selectList>          
+                <!-- refresh button -->
+                <apex:commandButton value="Reset" action="{!reset}" style="height: 30px;width: 60px;font-size: 14px;margin-left:20px;"/>
+                
+                <div class="panel"/><br/><!-- it will print the border line -->
+                <!--getting the fields related to selected sObject -->
+                <table>
+                    <tr>
+                        <td> 
+                            <h1 >{!selectedObject} Fields : </h1><br/>
+                            <apex:outputPanel >     
+                                <apex:selectList value="{!addselectedFieldleft}"  multiselect="true" styleClass="selectList"> 
+                                    <apex:selectOptions value="{!ObjectFieldsAddLeft}"/>
+                                </apex:selectList>
+                            </apex:outputPanel>
+                        </td>
+                        <td >   
+                            <!-- add and remove buttons -->
+                            <div class="buttonclass">
+                                <apex:commandButton value="Add" action="{!addFields}"  style="height: 30px;width: 60px;font-size: 14px;" reRender="refreshAllField" status="fetchStatus"/>
+                                <br /> <br />
+                                <apex:commandButton value="Remove" action="{!RemoveFields}"  style="height: 30px;width:80px;font-size: 13px;" status="fetchStatus" reRender="refreshAllField"/><br/> <br/>              
+                              <!--    <apex:actionStatus id="fetchStatus" >   
+                                  <apex:facet name="start" >
+                                        <img src="{!$Resource.loading}" height="45px;width:45px;"/>                   
+                                    </apex:facet>
+                                </apex:actionStatus> -->
+                            </div>
+                        </td>
+                        <td>  
+                            <!-- selected fields list -->       
+                            <h1 >Selected Fields : </h1><br/>
+                            <apex:selectList value="{!addselectedFieldright}"  multiselect="true" styleClass="selectList">
+                                <apex:selectOptions value="{!ObjectFieldstoright}"/>
+                            </apex:selectList>
+                        </td>
+                        <td>
+                            <apex:commandButton value="Process" action="{!process}" reRender="process" style="height: 30px;width:80px;font-size: 13px;margin:290px 0px 0px 50px;"/>
+                        </td>
+                    </tr>
+                </table>                
+            </apex:outputPanel>
+            {!selectedObject}<br/><br/>
+            {!getFieldsName}<br/><br/>
+            {!showFields}<br/><br/>
+             <div class="panel"/><br/><!-- it will print the border line -->
+            {!getFieldsName}<br/><br/>
+            <!--<apex:outputPanel id="process">
+          <c:PaginationComponent objectValue="{!selectedObject}" getTheQuery="{!getFieldsName}" FieldValue="{!showFields}"/>
+                </apex:outputPanel>-->
+        </apex:pageblock>
+    </apex:form>    
+</apex:page>

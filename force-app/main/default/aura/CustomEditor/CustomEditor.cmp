@@ -1,0 +1,56 @@
+<aura:component controller="CustomEditorController" implements="force:appHostable,flexipage:availableForRecordHome,force:hasRecordId,force:lightningQuickAction" access="global" >
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:attribute name="classNameList" type="List"/>
+    <aura:attribute name="readFlag" type="Boolean" default="true"/>
+    <aura:attribute name="body" type="String"/>
+    <aura:attribute name="classId" type="String"/>
+    <aura:attribute name="containerId" type="String"/>
+    <aura:attribute name="apexMemId" type="String" default="0"/>
+    <aura:attribute name="className" type="String"/>
+    <aura:attribute name="asyncId" type="String"/>
+    <aura:attribute name="successFlag" type="Boolean" default="false"/>
+    <aura:attribute name="Spinner" type="boolean" default="false"/>	<!-- Spinner Show and Hide -->
+    
+    <aura:attribute name="editFlag" type="Boolean" />
+    <aura:attribute name="saveFlag" type="Boolean" default="true"/>
+    <aura:attribute name="deployFlag" type="Boolean" default="true"/>
+    
+    <!-- Spinner Handler -->
+    <aura:if isTrue="{!v.Spinner}">
+        <div class="demo-only" style="height:6rem">
+            <div class="slds-spinner_container">
+                <div role="status" class="slds-spinner slds-spinner_medium slds-spinner_brand">
+                    <span class="slds-assistive-text">Loading</span>
+                    <div class="slds-spinner__dot-a"></div>
+                    <div class="slds-spinner__dot-b"></div>
+                </div>
+            </div>
+        </div>
+    </aura:if>
+    
+    <!-- Dynamically Show Object List -->
+    <div class="slds-align_absolute-center">
+        
+        <lightning:select label="Select Apex Class" onchange="{!c.onSelectChange}">
+            <option value="" text="- None -" />
+            <aura:iteration items="{!v.classNameList}" var="obj" indexVar="index">
+                <option  value="{!obj.Id}" label="{!obj.Name}" name="optionName" />
+            </aura:iteration>
+        </lightning:select>
+        
+        <br/>
+    </div><br/><br/>
+    <div class="slds-align_absolute-center">
+        <lightning:button variant="brand" label="Edit"  onclick="{!c.edit}" disabled="{!v.editFlag}"/>
+        <lightning:button variant="brand" label="Save"  onclick="{!c.save}" disabled="{!v.saveFlag}"/>
+        <lightning:button variant="brand" label="Deploy"  onclick="{!c.deploy}" disabled="{!v.deployFlag}"/>
+    </div><br/>
+    <div class="slds-align_absolute-center">
+        <aura:if isTrue="{!v.readFlag}">
+            <lightning:textarea name="input3" label="Custom Editor" placeholder="type here..." value="{!v.body}"  readonly="true"/>
+            <aura:set attribute="else">
+                <lightning:textarea name="input3" label="Custom Editor" placeholder="type here..." value="{!v.body}" />
+            </aura:set>
+        </aura:if>
+    </div>    
+</aura:component>

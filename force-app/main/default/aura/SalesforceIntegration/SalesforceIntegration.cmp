@@ -1,0 +1,79 @@
+<aura:component controller="SalesforceToSalesforceIntegration" >
+    <aura:handler name="init" value="{!this}" action="{!c.fetchList}"/>	<!-- Constructor Call at a time Component Loading Call Apex Controller -->
+    <aura:attribute name="objNameList" type="List"/>	<!--Dynamic Object List With Label -->
+    <aura:attribute name="Spinner" type="boolean" default="false"/>	<!-- Spinner Show and Hide -->
+    <aura:handler event="aura:waiting" action="{!c.showSpinner}"/>	<!-- Show Spinner According When Complete Apex Controller Prcessiong done-->
+    <aura:handler event="aura:doneWaiting" action="{!c.hideSpinner}"/>	<!-- After Complete Apex Controller Processing Done -->
+    
+    <aura:attribute name="objApiName" type="String"/>	<!-- Selected Object API Name -->
+    <aura:attribute name="options" type="List"/>	<!-- Field List with labrl and API Name -->
+    <aura:attribute name="flag" type="Boolean" default="false"/>	<!-- Hide DualListBox Section which contains Fields on UI -->
+    <aura:attribute name="tableFlag" type="Boolean" default="false"/>	<!-- Hide Column and  Records Section -->
+    <aura:attribute name="selectedFieldApi" type="List" />	<!-- Selected Field Api List -->
+    <aura:attribute name="fieldApi" type="String"/>	<!-- Query String For Fetch Records -->
+    <aura:attribute name="columnsList" type="List"/>	<!-- Selected Column List Store in List -->
+    <aura:attribute name="data" type="Object[]" />	<!-- All Records Store In  This List -->
+    
+    <!--Spinner Hanlder -->
+    <aura:if isTrue="{!v.Spinner}">
+        <div aura:id="spinnerId" class="slds-spinner_container">
+            <div class="slds-spinner--brand  slds-spinner slds-spinner--large slds-is-relative" role="alert">
+                <span class="slds-assistive-text">Loading</span>
+                <div class="slds-spinner__dot-a"></div>
+                <div class="slds-spinner__dot-b"></div>
+            </div>
+        </div>
+    </aura:if><br/><br/>
+    
+    
+    <!-- Dynamically Show Object List -->
+    <div class="slds-align_absolute-center">
+        <ui:inputSelect aura:id="selectedObjName" label="Select Object " change="{!c.onSelectChange}">
+            <option value="" text="- None -" />
+            <aura:iteration items="{!v.objNameList}" var="obj" indexVar="key">
+                <option value="{!obj.key}" text="{!obj.value}" />
+            </aura:iteration>
+        </ui:inputSelect>
+        <br/>
+    </div><br/><br/>
+    
+    <!-- Show Fields Selected Object -->
+    <aura:if isTrue="{!v.flag}">
+        <div class="slds-align_absolute-center" style="width: 700px">
+            <lightning:dualListbox name="fields"                                  
+                                   sourceLabel="Available" 
+                                   selectedLabel="Selected"                                  
+                                   options="{!v.options}" 
+                                   value="{!v.selectedFieldApi}"
+                                   onchange="{!c.handleChange}"
+                                   />
+            <lightning:button variant="brand" label="Process"  onclick="{!c.showSelectedFields}" />                  
+        </div>
+    </aura:if>
+    
+    <aura:if isTrue="{!v.tableFlag}">
+        <aura:if isTrue="{!v.data.length>0}"> 
+            <div class="slds-p-left_large">
+                Total Records = {!v.totalRecSize}
+            </div>
+            <div style="height: 50%">
+                <div class="slds-p-left_medium">
+                    <lightning:datatable
+                                         aura:id="colId"
+                                         keyField="id"
+                                         data="{!v.data}"
+                                         columns="{!v.columnsList}"
+                                         hideCheckboxColumn="true"
+                                         />
+                </div>
+            </div>
+            <br/>
+            
+            <!-- If No Records Have in List -->
+            <aura:set attribute="else">
+                <br/><br/>
+                <h1 align="center"> No Reords Found</h1>
+            </aura:set>
+        </aura:if>
+    </aura:if>
+</aura:component>
